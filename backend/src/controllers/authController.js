@@ -103,3 +103,21 @@ export const logIn = async (req, res) => {
     return res.status(500).json({ message: "System error" });
   }
 };
+
+export const logOut = async (req, res) => {
+  try {
+    // get refresh token from cookies
+    const token = req.cookies?.refreshToken;
+    if (token) {
+      // delete refresh token in db
+      await Session.deleteOne({ refreshToken: token });
+
+      // delete refresh token in cookies
+      res.clearCookie("refreshToken");
+    }
+    return res.sendStatus(204);
+  } catch (error) {
+    console.log("Error when calling logOut", error);
+    return res.status(500).json({ message: "System error" });
+  }
+};

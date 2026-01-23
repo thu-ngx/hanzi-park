@@ -1,5 +1,11 @@
 import brcypt from "bcrypt";
 import User from "../models/User.js";
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import Session from "../models/Session.js";
+
+const ACCESS_TOKEN_TTL = "30m"; // usually below 15m
+const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days in ms
 
 export const signUp = async (req, res) => {
   try {
@@ -33,6 +39,67 @@ export const signUp = async (req, res) => {
     return res.sendStatus(204);
   } catch (error) {
     console.error("Error when calling signUp", error);
+    return res.status(500).json({ message: "System error" });
+  }
+};
+
+export const logIn = async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // check if data is missing
+    if (!username || !password) {
+      return res
+        .status(400)
+        .json({ message: "Username or password is missing" });
+    }
+
+    // check if user exists
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ message: "Username or password is not correct" });
+    }
+
+    // compare hashedPassword with password input
+    const passwordCorrect = await brcypt.compare(password, user.hashedPassword);
+    if (!passwordCorrect) {
+      return res
+        .status(401)
+        .json({ message: "Username or password is not correct" });
+    }
+
+    // create access token with JWT
+    const accessToken = jwt.sign(
+      { userId: user._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: ACCESS_TOKEN_TTL },
+    );
+
+    // create refresh token
+    const refreshToken = crypto.randomBytes(64).toString("hex");
+    // save refresh token in db
+    await Session.create({
+      userId: user._id,
+      refreshToken,
+      expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
+    });
+
+    // return refresh token via cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none", // separate FE and BE
+      maxAge: REFRESH_TOKEN_TTL,
+    });
+
+    // return access token in respond
+    return res
+      .status(200)
+      .json({ message: `User ${user.displayName} has logged in`, accessToken });
+  } catch (error) {
+    console.error("Error when calling logIn", error);
     return res.status(500).json({ message: "System error" });
   }
 };

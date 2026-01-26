@@ -1,4 +1,4 @@
-import { SignupForm } from "@/components/signup-form";
+import { SignupForm } from "@/components/auth/signup-form";
 import { MessageCircle } from "lucide-react";
 
 const SignUpPage = () => {
@@ -17,10 +17,10 @@ const SignUpPage = () => {
         <div className="flex w-full max-w-sm flex-col gap-6">
           <a
             href="#"
-            className="flex items-center gap-2 self-center font-medium text-white"
+            className="flex items-center gap-2 text-4xl self-center font-medium text-white"
           >
-            <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <MessageCircle className="size-4" />
+            <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
+              <MessageCircle className="size-6" />
             </div>
             Chatty
           </a>

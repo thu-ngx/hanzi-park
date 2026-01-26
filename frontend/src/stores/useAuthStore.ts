@@ -25,4 +25,21 @@ export const useAuthStore = create<authState>((set, get) => ({
       set({ loading: false });
     }
   },
+
+  logIn: async (username, password) => {
+    try {
+      set({ loading: true });
+
+      // call api & set access token
+      const { accessToken } = await authService.logIn(username, password);
+      set({ accessToken });
+
+      toast.success("Welcome back to Chatty!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to log in.");
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));

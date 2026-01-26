@@ -90,7 +90,7 @@
     );
 
     /* Aurora gradient */
-    --gradient-purple: radial-gradient(
+    --gradient-teal: radial-gradient(
       125% 125% at 50% 10%,
       hsla(0, 0%, 100%, 1) 40%,
       hsla(174, 72%, 40%, 0.5) 100%
@@ -152,7 +152,7 @@
     --away: 45 100% 65%;
     --offline: 0 0% 45%;
 
-    --destructive: 0 75% 50%;
+    --destructive: 0 55% 58%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 210 12% 22%;
@@ -182,9 +182,9 @@
     );
 
     /* Aurora dark gradient */
-    --gradient-purple: radial-gradient(
-      125% 125% at 50% 10%,
-      hsla(220, 15%, 8%, 1) 40%,
+    --gradient-teal: radial-gradient(
+      125% 125% at 50% 90%,
+      hsla(220, 15%, 4%, 1) 40%,
       hsla(174, 65%, 25%, 0.6) 100%
     );
 
@@ -207,6 +207,15 @@
   body {
     @apply text-slate-800 dark:text-slate-200;
   }
+
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  -webkit-box-shadow: 0 0 0px 1000px hsl(var(--input)) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 /* Chat App Utility Classes */
@@ -258,8 +267,8 @@
     background: var(--gradient-glass);
   }
 
-  .bg-gradient-purple {
-    background: var(--gradient-purple);
+  .bg-gradient-teal {
+    background: var(--gradient-teal);
   }
 
   /* Shadows */

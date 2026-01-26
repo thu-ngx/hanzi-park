@@ -17,11 +17,13 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useNavigate } from "react-router";
 
 const signUpSchema = z
   .object({
-    firstname: z.string().min(1, "First name is required"),
-    lastname: z.string().min(1, "Last name is required"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
     username: z.string().min(3, "Username must be at least 3 characters"),
     email: z.email("Email is invalid"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -38,6 +40,8 @@ export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -47,7 +51,11 @@ export function SignupForm({
   });
 
   const onSubmit = async (data: SignUpFormValues) => {
+    const { username, email, password, firstName, lastName } = data;
     // call api to sign up
+    await signUp(username, email, password, firstName, lastName);
+
+    navigate("/login");
   };
 
   return (
@@ -65,28 +73,28 @@ export function SignupForm({
               <Field>
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
-                    <FieldLabel htmlFor="firstname">First Name</FieldLabel>
+                    <FieldLabel htmlFor="firstName">First Name</FieldLabel>
                     <Input
-                      id="firstname"
+                      id="firstName"
                       type="text"
-                      {...register("firstname")}
+                      {...register("firstName")}
                     />
-                    {errors.firstname && (
+                    {errors.firstName && (
                       <p className="text-destructive text-sm ">
-                        {errors.firstname?.message}
+                        {errors.firstName?.message}
                       </p>
                     )}
                   </Field>
                   <Field>
-                    <FieldLabel htmlFor="lastname">Last Name</FieldLabel>
+                    <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
                     <Input
-                      id="lastname"
+                      id="lastName"
                       type="text"
-                      {...register("lastname")}
+                      {...register("lastName")}
                     />
-                    {errors.lastname && (
+                    {errors.lastName && (
                       <p className="text-destructive text-sm ">
-                        {errors.lastname?.message}
+                        {errors.lastName?.message}
                       </p>
                     )}
                   </Field>

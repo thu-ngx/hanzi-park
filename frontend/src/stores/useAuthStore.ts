@@ -40,7 +40,7 @@ export const useAuthStore = create<authState>((set, get) => ({
 
       // call api & set access token
       const { accessToken } = await authService.logIn(username, password);
-      set({ accessToken });
+      get().setAccessToken(accessToken)
 
       await get().fetchMe();
 

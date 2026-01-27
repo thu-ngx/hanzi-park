@@ -25,4 +25,44 @@ api.interceptors.request.use(
   },
 );
 
+// auto call refresh when accessToken expired (403) and still logged in
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // skip auth endpoints
+    if (
+      originalRequest.url.includes("/auth/signup") ||
+      originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/refresh")
+    ) {
+      return Promise.reject("error");
+    }
+
+    // accessToken expired (403)
+    if (error.response?.status == 403 && !originalRequest._retryCount) {
+      originalRequest._retryCount = true;
+      console.log("Retry refresh");
+
+      try {
+        const res = await api.post("/auth/refresh", { withCredentials: true });
+
+        const newAccessToken = res.data.accessToken;
+        useAuthStore.getState().setAccessToken(newAccessToken);
+
+        // attach new accessToken to headers of original request
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        useAuthStore.getState().clearState();
+        return Promise.reject(refreshError);
+      }
+    }
+
+    // other error status
+    return Promise.reject("error");
+  },
+);
+
 export default api;

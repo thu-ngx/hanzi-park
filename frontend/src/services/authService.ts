@@ -32,4 +32,8 @@ export const authService = {
 
     return res.data; // access token
   },
+
+  logOut: async () => {
+    await api.post("/auth/logout", {}, { withCredentials: true });
+  },
 };

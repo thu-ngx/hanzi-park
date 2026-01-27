@@ -30,10 +30,15 @@ export const authService = {
       { withCredentials: true },
     );
 
-    return res.data; // access token
+    return res.data; // accessToken
   },
 
   logOut: async () => {
     await api.post("/auth/logout", {}, { withCredentials: true });
+  },
+
+  fetchMe: async () => {
+    const res = await api.get("/users/me", { withCredentials: true });
+    return res.data.user;
   },
 };

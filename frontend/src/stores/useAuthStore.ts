@@ -38,6 +38,8 @@ export const useAuthStore = create<authState>((set, get) => ({
       const { accessToken } = await authService.logIn(username, password);
       set({ accessToken });
 
+      await get().fetchMe()
+
       toast.success("Welcome back to Chatty!");
     } catch (error) {
       console.error(error);
@@ -55,6 +57,20 @@ export const useAuthStore = create<authState>((set, get) => ({
     } catch (error) {
       console.error(error);
       toast.error("Failed to log out. Try again.");
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  fetchMe: async () => {
+    try {
+      set({ loading: true });
+      const user = await authService.fetchMe();
+      set({ user });
+    } catch (error) {
+      console.error(error);
+      set({ accessToken: null, user: null });
+      toast.error("Error when fetching user data. Try again");
     } finally {
       set({ loading: false });
     }

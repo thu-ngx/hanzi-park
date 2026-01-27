@@ -8,6 +8,10 @@ export const useAuthStore = create<authState>((set, get) => ({
   user: null,
   loading: false,
 
+  setAccessToken: (accessToken) => {
+    set({ accessToken });
+  },
+
   clearState: () => {
     set({ accessToken: null, user: null, loading: false });
   },
@@ -38,7 +42,7 @@ export const useAuthStore = create<authState>((set, get) => ({
       const { accessToken } = await authService.logIn(username, password);
       set({ accessToken });
 
-      await get().fetchMe()
+      await get().fetchMe();
 
       toast.success("Welcome back to Chatty!");
     } catch (error) {
@@ -71,6 +75,26 @@ export const useAuthStore = create<authState>((set, get) => ({
       console.error(error);
       set({ accessToken: null, user: null });
       toast.error("Error when fetching user data. Try again");
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  refresh: async () => {
+    try {
+      set({ loading: true });
+      const { user, fetchMe, setAccessToken } = get();
+      const accessToken = await authService.refresh();
+
+      setAccessToken(accessToken);
+
+      if (!user) {
+        await fetchMe();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Your session has expired. Please log in again");
+      get().clearState();
     } finally {
       set({ loading: false });
     }

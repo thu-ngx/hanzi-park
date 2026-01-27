@@ -121,3 +121,34 @@ export const logOut = async (req, res) => {
     return res.status(500).json({ message: "System error" });
   }
 };
+
+export const refreshToken = async (req, res) => {
+  try {
+    // get refresh token from cookies
+    const token = req.cookies?.refreshToken;
+    if (!token) {
+      return res.status(401).json({ message: "Refresh token not found" });
+    }
+
+    // compare with refresh token in db, check if expired
+    const session = await Session.findOne({ refreshToken: token });
+    if (!session) {
+      return res.status(403).json({ message: "Token is invalid or expired" });
+    }
+    if (session.expiresAt < new Date()) {
+      return res.status(403).json({ message: "Token is expired" });
+    }
+
+    // create new access token
+    const accessToken = jwt.sign(
+      { userID: session.userId },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: ACCESS_TOKEN_TTL },
+    );
+
+    return res.status(200).json({ accessToken });
+  } catch (error) {
+    console.log("Error when calling refreshToken", error);
+    return res.status(500).json({ message: "System error" });
+  }
+};

@@ -205,7 +205,7 @@
   }
 
   body {
-    @apply text-slate-800 dark:text-slate-200;
+    @apply bg-background text-slate-800 dark:text-slate-200;
   }
 
 }

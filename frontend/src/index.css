@@ -6,41 +6,40 @@
 
 @layer base {
   :root {
-    /* Base colors - Aurora light theme */
-    --background: 180 20% 98%;
-    --foreground: 200 25% 20%;
+    /* Base colors - FFFADE theme */
+    --background: 48 100% 98%;
+    --foreground: 0 0% 20%;
 
     /* Card system */
-    --card: 180 25% 97%;
-    --card-foreground: 200 25% 20%;
+    --card: 48 100% 98%;
+    --card-foreground: 0 0% 20%;
 
     /* Popover system */
-    --popover: 180 25% 97%;
-    --popover-foreground: 200 20% 15%;
+    --popover: 48 100% 98%;
+    --popover-foreground: 0 0% 20%;
 
-    /* Primary - Teal/Cyan Aurora */
-    --primary: 174 72% 40%;
+    /* Primary - Dark Green #06402B */
+    --primary: 150 87% 13%;
     --primary-foreground: 0 0% 100%;
-    /* Glow - lighter cyan */
-    --primary-glow: 185 80% 55%;
+    --primary-glow: 150 70% 30%;
 
-    /* Secondary - soft teal */
-    --secondary: 175 40% 90%;
-    --secondary-foreground: 174 72% 35%;
+    /* Secondary - warm light cream */
+    --secondary: 48 100% 98%;
+    --secondary-foreground: 150 87% 13%;
 
-    /* Muted */
-    --muted: 180 20% 94%;
-    --muted-foreground: 200 15% 45%;
+    /* Muted - warm beige */
+    --muted: 48 80% 94%;
+    --muted-foreground: 0 0% 50%;
 
-    /* Accent - bright cyan */
-    --accent: 190 90% 60%;
-    --accent-foreground: 200 30% 10%;
+    /* Accent - same as primary for consistency */
+    --accent: 150 87% 13%;
+    --accent-foreground: 0 0% 100%;
 
     /* Chat colors */
-    --chat-bubble-sent: 174 72% 40%;
+    --chat-bubble-sent: 150 87% 13%;
     --chat-bubble-sent-foreground: 0 0% 100%;
-    --chat-bubble-received: 180 15% 95%;
-    --chat-bubble-received-foreground: 200 20% 15%;
+    --chat-bubble-received: 38 25% 94%;
+    --chat-bubble-received-foreground: 0 0% 20%;
 
     /* Status colors */
     --online: 145 80% 50%;
@@ -59,57 +58,57 @@
     --destructive-foreground: 0 0% 100%;
 
     /* Border and input */
-    --border: 180 20% 85%;
-    --input: 180 20% 90%;
-    --ring: 174 72% 40%;
+    --border: 35 15% 86%;
+    --input: 38 30% 93%;
+    --ring: 150 87% 13%;
 
     /* Design system values */
     --radius: 1rem;
 
-    /* Gradients - Aurora teal */
+    /* Gradients */
     --gradient-primary: linear-gradient(
       135deg,
-      hsl(174, 72%, 40%),
-      hsl(185, 80%, 55%)
+      hsl(150, 87%, 13%),
+      hsl(150, 80%, 20%)
     );
     --gradient-chat: linear-gradient(
       135deg,
-      hsl(174, 72%, 45%),
-      hsl(190, 75%, 50%)
+      hsl(150, 87%, 13%),
+      hsl(150, 75%, 22%)
     );
     --gradient-accent: linear-gradient(
       90deg,
-      hsl(174, 70%, 45%),
-      hsl(195, 85%, 55%)
+      hsl(150, 87%, 13%),
+      hsl(150, 80%, 20%)
     );
 
     --gradient-glass: linear-gradient(
       135deg,
-      hsl(180, 25%, 97%) 0%,
-      hsl(175, 30%, 94%) 100%
+      hsl(0, 0%, 100%) 0%,
+      hsl(0, 0%, 99%) 100%
     );
 
-    /* Aurora gradient */
+    /* Subtle gradient */
     --gradient-teal: radial-gradient(
       125% 125% at 50% 10%,
       hsla(0, 0%, 100%, 1) 40%,
-      hsla(174, 72%, 40%, 0.5) 100%
+      hsla(150, 30%, 96%, 0.3) 100%
     );
 
-    /* Shadows */
-    --shadow-soft: 0 8px 32px -8px hsl(174 72% 40% / 0.15);
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.3);
-    --shadow-bubble: 0 4px 20px -4px hsl(174 60% 50% / 0.2);
+    /* Shadows - subtle light shadows */
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.08);
+    --shadow-glow: 0 0 0px hsl(var(--primary) / 0);
+    --shadow-bubble: 0 2px 8px hsl(0 0% 0% / 0.06);
 
     /* Sidebar */
-    --sidebar-background: 180 20% 98%;
-    --sidebar-foreground: 200 20% 30%;
-    --sidebar-primary: 174 72% 40%;
+    --sidebar-background: 0 0% 98.5%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 150 87% 13%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 175 30% 94%;
-    --sidebar-accent-foreground: 174 72% 35%;
-    --sidebar-border: 180 15% 88%;
-    --sidebar-ring: 174 72% 50%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 150 87% 13%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 150 87% 13%;
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -117,97 +116,75 @@
   }
 
   .dark {
-    /* Dark mode - Discord Aurora aesthetic */
-    --background: 220 15% 13%;
-    --foreground: 180 15% 90%;
-
-    --card: 220 15% 10%;
-    --card-foreground: 180 15% 90%;
-
-    --popover: 220 15% 10%;
-    --popover-foreground: 180 20% 92%;
-
-    /* Primary - Aurora teal/cyan */
-    --primary: 174 65% 50%;
-    --primary-foreground: 220 15% 8%;
-    --primary-glow: 185 75% 60%;
-
-    --secondary: 200 15% 18%;
-    --secondary-foreground: 174 65% 60%;
-
-    --muted: 220 12% 16%;
-    --muted-foreground: 200 10% 55%;
-
-    --accent: 185 80% 55%;
-    --accent-foreground: 220 15% 8%;
-
-    /* Chat bubbles in dark mode */
-    --chat-bubble-sent: 174 65% 45%;
+    /* Not using dark mode anymore, but keeping for compatibility */
+    --background: 0 0% 98.5%;
+    --foreground: 0 0% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+    --primary: 150 87% 13%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 150 70% 30%;
+    --secondary: 0 0% 98.5%;
+    --secondary-foreground: 150 87% 13%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 150 87% 13%;
+    --accent-foreground: 0 0% 100%;
+    --chat-bubble-sent: 150 87% 13%;
     --chat-bubble-sent-foreground: 0 0% 100%;
-    --chat-bubble-received: 220 15% 16%;
-    --chat-bubble-received-foreground: 180 15% 88%;
-
-    /* Status colors */
-    --online: 145 80% 55%;
+    --chat-bubble-received: 0 0% 96%;
+    --chat-bubble-received-foreground: 0 0% 20%;
+    --online: 145 80% 50%;
     --away: 45 100% 65%;
-    --offline: 0 0% 45%;
-
-    --destructive: 0 55% 58%;
+    --offline: 0 0% 70%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
-
-    --border: 210 12% 22%;
-    --input: 220 15% 16%;
-    --ring: 174 65% 50%;
-
-    /* Dark mode gradients - Aurora */
+    --border: 0 0% 88%;
+    --input: 0 0% 95%;
+    --ring: 150 87% 13%;
     --gradient-primary: linear-gradient(
       135deg,
-      hsl(174, 65%, 50%),
-      hsl(185, 75%, 60%)
+      hsl(150, 87%, 13%),
+      hsl(150, 80%, 20%)
     );
     --gradient-chat: linear-gradient(
       135deg,
-      hsl(174, 65%, 48%),
-      hsl(190, 70%, 55%)
+      hsl(150, 87%, 13%),
+      hsl(150, 75%, 22%)
     );
     --gradient-accent: linear-gradient(
       90deg,
-      hsl(174, 65%, 50%),
-      hsl(195, 80%, 58%)
+      hsl(150, 87%, 13%),
+      hsl(150, 80%, 20%)
     );
     --gradient-glass: linear-gradient(
-      45deg,
-      hsl(220, 15%, 10%) 0%,
-      hsl(215, 15%, 14%) 100%
+      135deg,
+      hsl(0, 0%, 98.5%) 0%,
+      hsl(0, 0%, 97%) 100%
     );
-
-    /* Aurora dark gradient */
     --gradient-teal: radial-gradient(
-      125% 125% at 50% 90%,
-      hsla(220, 15%, 4%, 1) 40%,
-      hsla(174, 65%, 25%, 0.6) 100%
+      125% 125% at 50% 10%,
+      hsla(0, 0%, 100%, 1) 40%,
+      hsla(150, 30%, 96%, 0.3) 100%
     );
-
-    /* Dark shadows with teal glow */
-    --shadow-soft: 0 8px 32px -8px hsl(174 65% 50% / 0.25);
-    --shadow-glow: 0 0 40px hsl(var(--primary) / 0.4);
-    --shadow-bubble: 0 4px 20px -4px hsl(174 55% 40% / 0.3);
-
-    /* Sidebar - Discord dark style */
-    --sidebar-background: 220 15% 10%;
-    --sidebar-foreground: 180 12% 85%;
-    --sidebar-primary: 174 65% 50%;
+    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.08);
+    --shadow-glow: 0 0 0px hsl(var(--primary) / 0);
+    --shadow-bubble: 0 2px 8px hsl(0 0% 0% / 0.06);
+    --sidebar-background: 0 0% 98.5%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 150 87% 13%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 12% 16%;
-    --sidebar-accent-foreground: 180 12% 85%;
-    --sidebar-border: 215 10% 18%;
-    --sidebar-ring: 174 65% 50%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 150 87% 13%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 150 87% 13%;
   }
 
   body {
-    @apply bg-background text-slate-800 dark:text-slate-200;
+    @apply bg-background text-foreground;
   }
-
 }
 
 input:-webkit-autofill,
@@ -221,33 +198,33 @@ input:-webkit-autofill:focus {
 /* Chat App Utility Classes */
 @layer components {
   .glass {
-    @apply bg-linear-to-br from-teal-200/10 to-cyan-100/5 border-teal-300/30;
+    @apply bg-slate-50/50 backdrop-blur-sm border border-gray-200/50;
   }
 
   .dark .glass {
-    @apply backdrop-blur-xl bg-linear-to-br from-white/10 to-white/5 border border-white/20;
+    @apply bg-slate-50/50 backdrop-blur-sm border border-gray-200/50;
   }
 
   .glass-strong {
-    @apply backdrop-blur-2xl bg-linear-to-br from-card/90 to-card/60 border border-border/70;
+    @apply backdrop-blur-md bg-slate-50 border border-gray-200/70;
   }
 
   /* Chat bubble variants */
   .chat-bubble-sent {
-    @apply bg-primary/80! text-[hsl(var(--chat-bubble-sent-foreground))]! shadow-(--shadow-bubble);
+    @apply bg-primary text-primary-foreground shadow-soft;
   }
 
   .chat-bubble-received {
-    @apply bg-[hsl(var(--chat-bubble-received))] text-[hsl(var(--chat-bubble-received-foreground))] border border-border/50;
+    @apply bg-muted text-muted-foreground border border-gray-200;
   }
 
   /* Status indicators */
   .status-online {
-    @apply bg-[hsl(var(--online))] shadow-[0_0_8px_hsl(var(--online)/0.5)];
+    @apply bg-online;
   }
 
   .status-offline {
-    @apply bg-[hsl(var(--offline))];
+    @apply bg-offline;
   }
 
   /* Gradient backgrounds */
@@ -305,7 +282,8 @@ input:-webkit-autofill:focus {
 
   /* Message bounce in animation */
   .message-bounce {
-    animation: messageSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    animation: messageSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+      forwards;
   }
 
   @keyframes messageSlideIn {

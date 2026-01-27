@@ -40,18 +40,18 @@ export function LogInForm({
     resolver: zodResolver(logInSchema),
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LogInFormValues) => {
     const { username, password } = data;
     // call api to log in
     await logIn(username, password);
-    navigate("/")
+    navigate("/");
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden border-border">
+      <Card className="overflow-hidden border-gray-200">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back!</CardTitle>
           <CardDescription>Log in your Chatty account</CardDescription>

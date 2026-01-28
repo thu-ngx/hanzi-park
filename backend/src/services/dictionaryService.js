@@ -65,7 +65,7 @@ export async function lookupCharacter(character) {
 }
 
 /**
- * Bucket characters by frequency rank
+ * Bucket characters by frequency rank - returns rich objects with pinyin/meaning
  */
 function bucketByFrequency(characters) {
   const top1000 = [];
@@ -74,12 +74,17 @@ function bucketByFrequency(characters) {
 
   for (const char of characters) {
     const rank = char.frequencyRank;
+    const richChar = {
+      char: char.character,
+      pinyin: char.pinyin || [],
+      meaning: char.definitions?.[0] || null,
+    };
     if (rank && rank <= 1000) {
-      top1000.push(char.character);
+      top1000.push(richChar);
     } else if (rank && rank <= 2000) {
-      mid.push(char.character);
+      mid.push(richChar);
     } else {
-      rest.push(char.character);
+      rest.push(richChar);
     }
   }
 
@@ -97,7 +102,7 @@ async function getSemanticFamily(semanticComponent, excludeChar) {
       "etymology.semantic": semanticComponent,
       character: { $ne: excludeChar },
     },
-    { character: 1, frequencyRank: 1, _id: 0 },
+    { character: 1, frequencyRank: 1, pinyin: 1, definitions: 1, _id: 0 },
   )
     .limit(100)
     .lean();
@@ -116,7 +121,7 @@ async function getPhoneticFamily(phoneticComponent, excludeChar) {
       "etymology.phonetic": phoneticComponent,
       character: { $ne: excludeChar },
     },
-    { character: 1, frequencyRank: 1, _id: 0 },
+    { character: 1, frequencyRank: 1, pinyin: 1, definitions: 1, _id: 0 },
   )
     .limit(100)
     .lean();

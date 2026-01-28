@@ -1,11 +1,7 @@
 import { create } from "zustand";
 import { toast } from "sonner";
 import { hanziService } from "@/services/hanziService";
-import type {
-  CharacterAnalysis,
-  SavedCharacter,
-  DictionaryEntry,
-} from "@/types/character";
+import type { CharacterAnalysis, SavedCharacter } from "@/types/character";
 
 interface HanziState {
   // UI state
@@ -19,11 +15,6 @@ interface HanziState {
   savedCharacters: SavedCharacter[];
   collectionLoading: boolean;
 
-  // Composition tree
-  compositionEntry: DictionaryEntry | null;
-  compositionLoading: boolean;
-  compositionOpen: boolean;
-
   // Actions
   toggleDarkMode: () => void;
 
@@ -34,9 +25,6 @@ interface HanziState {
   saveCharacter: (data: CharacterAnalysis, notes?: string) => Promise<void>;
   updateNotes: (id: string, notes: string) => Promise<void>;
   removeCharacter: (id: string) => Promise<void>;
-
-  loadComposition: (char: string) => Promise<void>;
-  closeComposition: () => void;
 }
 
 export const useHanziStore = create<HanziState>((set, get) => ({
@@ -47,10 +35,6 @@ export const useHanziStore = create<HanziState>((set, get) => ({
 
   savedCharacters: [],
   collectionLoading: false,
-
-  compositionEntry: null,
-  compositionLoading: false,
-  compositionOpen: false,
 
   toggleDarkMode: () => {
     const next = !get().darkMode;
@@ -75,8 +59,6 @@ export const useHanziStore = create<HanziState>((set, get) => ({
   resetExplorer: () => {
     set({
       activeCharacter: null,
-      compositionOpen: false,
-      compositionEntry: null,
     });
   },
 
@@ -116,7 +98,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
       const updated = await hanziService.updateNotes(id, notes);
       set((s) => ({
         savedCharacters: s.savedCharacters.map((c) =>
-          c._id === id ? updated : c,
+          c._id === id ? updated : c
         ),
       }));
       toast.success("Notes updated");
@@ -136,24 +118,4 @@ export const useHanziStore = create<HanziState>((set, get) => ({
       toast.error("Failed to remove character");
     }
   },
-
-  loadComposition: async (char) => {
-    try {
-      set({
-        compositionLoading: true,
-        compositionOpen: true,
-        compositionEntry: null,
-      });
-      const entry = await hanziService.getDictionaryEntry(char);
-      set({ compositionEntry: entry });
-    } catch {
-      toast.error("Composition data not available for this character");
-      set({ compositionOpen: false });
-    } finally {
-      set({ compositionLoading: false });
-    }
-  },
-
-  closeComposition: () =>
-    set({ compositionOpen: false, compositionEntry: null }),
 }));

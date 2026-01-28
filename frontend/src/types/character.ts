@@ -11,10 +11,16 @@ export interface PhoneticComponent {
   pinyin?: string;
 }
 
+export interface RichFamilyCharacter {
+  char: string;
+  pinyin: string[];
+  meaning: string | null;
+}
+
 export interface FrequencyBucketedFamily {
-  top1000: string[];
-  mid: string[];
-  rest: string[];
+  top1000: RichFamilyCharacter[];
+  mid: RichFamilyCharacter[];
+  rest: RichFamilyCharacter[];
 }
 
 export interface CharacterAnalysis {

@@ -44,8 +44,8 @@ const HomePage = () => {
               <Link to="/signup" className="text-primary hover:underline">
                 Sign up for an account
               </Link>{" "}
-              if you want to save personal notes for characters. <br /> This
-              project uses data from{" "}
+              if you want to save personal notes for characters in collections.{" "}
+              <br /> This project uses data from{" "}
               <a
                 href="https://github.com/skishore/makemeahanzi"
                 className="text-primary hover:underline"
@@ -61,18 +61,18 @@ const HomePage = () => {
               </a>
               , inspired by{" "}
               <a
-                href="https://hanzicraft.com/"
-                className="text-primary hover:underline"
-              >
-                HanziCraft
-              </a>{" "}
-              and{" "}
-              <a
                 href="https://www.hanlyapp.com/"
                 className="text-primary hover:underline"
               >
                 Hanly
               </a>
+              and{" "}
+              <a
+                href="https://hanzicraft.com/"
+                className="text-primary hover:underline"
+              >
+                HanziCraft
+              </a>{" "}
             </p>
           </div>
         </div>

@@ -32,17 +32,17 @@ const MyCollectionPage = () => {
       updateNotes(id, editNotes);
       setEditingId(null);
     },
-    [editNotes, updateNotes]
+    [editNotes, updateNotes],
   );
 
   const filtered = searchQuery
     ? savedCharacters.filter(
-      (c) =>
-        c.character.includes(searchQuery) ||
-        c.pinyin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.meaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        c.notes?.toLowerCase().includes(searchQuery.toLowerCase())
-    )
+        (c) =>
+          c.character.includes(searchQuery) ||
+          c.pinyin.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.meaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          c.notes?.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
     : savedCharacters;
 
   return (
@@ -118,7 +118,7 @@ const MyCollectionPage = () => {
                 Your collection is empty
               </p>
               <p className="text-sm text-muted-foreground">
-                Analyze characters and save them to build your collection
+                Look up characters and save them to build your collection
               </p>
             </div>
           )}

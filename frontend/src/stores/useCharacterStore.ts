@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { characterService } from "@/services/characterService";
 import type { CharacterAnalysis, SavedCharacter } from "@/types/character";
 

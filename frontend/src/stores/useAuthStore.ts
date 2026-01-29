@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { authService } from "@/services/authService";
 import type { authState } from "@/types/store";
 
@@ -80,7 +80,7 @@ export const useAuthStore = create<authState>((set, get) => ({
     }
   },
 
-  refresh: async () => {
+  refresh: async (options) => {
     try {
       set({ loading: true });
       const { user, fetchMe, setAccessToken } = get();
@@ -93,7 +93,10 @@ export const useAuthStore = create<authState>((set, get) => ({
       }
     } catch (error) {
       console.error(error);
-      toast.error("Your session has expired. Please log in again");
+      // Only show error toast if not in silent mode (used for optional auth flows)
+      if (!options?.silent) {
+        toast.error("Your session has expired. Please log in again");
+      }
       get().clearState();
     } finally {
       set({ loading: false });

@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
+import { toast } from "@/lib/toast";
 import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "./CharacterTile";
@@ -8,6 +10,7 @@ import { characterService } from "@/services/characterService";
 const CharacterDetail = () => {
   const { activeCharacter, activeLoading, saveCharacter, savedCharacters } =
     useCharacterStore();
+  const { accessToken } = useAuthStore();
 
   const [notes, setNotes] = useState("");
   const [parentCharacters, setParentCharacters] = useState<
@@ -126,9 +129,15 @@ const CharacterDetail = () => {
   const data = activeCharacter;
 
   const handleSave = () => {
-    if (data) {
-      saveCharacter(data, notes);
+    if (!data) return;
+
+    // Check if user is authenticated
+    if (!accessToken) {
+      toast.info("Please log in to save notes to your collection");
+      return;
     }
+
+    saveCharacter(data, notes);
   };
 
   return (

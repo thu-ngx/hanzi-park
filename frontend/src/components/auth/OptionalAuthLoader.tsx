@@ -10,7 +10,7 @@ const OptionalAuthLoader = () => {
     // Try to refresh token if not logged in
     if (!accessToken) {
       try {
-        await refresh();
+        await refresh({ silent: true });
       } catch {
         // user is just not logged in
       }

@@ -83,7 +83,7 @@ const CharacterCard = ({
                             value={editNotes}
                             onChange={(e) => onEditNotesChange(e.target.value)}
                             className="w-full h-16 px-2 py-1.5 text-xs rounded-lg border border-gray-300 bg-white
-                focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                focus:outline-none resize-none"
                         />
                         <div className="flex gap-2">
                             <button

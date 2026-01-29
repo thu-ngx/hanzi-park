@@ -21,9 +21,15 @@ const StrokeOrderAnimation = ({
   useEffect(() => {
     if (!containerRef.current || !character) return;
 
-    // Clear previous animation
+    // Cancel any ongoing animation before clearing
+    if (writerRef.current) {
+      writerRef.current.cancelQuiz();
+      writerRef.current.hideCharacter();
+      writerRef.current = null;
+    }
+
+    // Clear previous content
     containerRef.current.innerHTML = "";
-    writerRef.current = null;
 
     try {
       const writer = HanziWriter.create(containerRef.current, character, {
@@ -52,7 +58,12 @@ const StrokeOrderAnimation = ({
     }
 
     return () => {
-      writerRef.current = null;
+      // Cancel any ongoing animation before cleanup
+      if (writerRef.current) {
+        writerRef.current.cancelQuiz();
+        writerRef.current.hideCharacter();
+        writerRef.current = null;
+      }
     };
   }, [character, size, showOutline, autoAnimate]);
 

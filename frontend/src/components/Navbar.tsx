@@ -46,7 +46,7 @@ const Navbar = () => {
         >
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold text-primary">字</span>
-            <span className="text-sm text-primary font-semibold hidden sm:inline">
+            <span className="text-md md:text-lg text-primary font-semibold">
               Hanzi Park
             </span>
           </div>
@@ -54,8 +54,13 @@ const Navbar = () => {
 
         {/* Center: Search (only show when not on home page) */}
         {!isHomePage && (
-          <div className="flex-1 flex justify-center max-w-md mx-4">
-            <GlobalSearch />
+          <div className="flex flex-1 justify-center max-w-[120px] sm:max-w-md mx-2 sm:mx-4">
+            <div className="hidden sm:block w-full">
+              <GlobalSearch />
+            </div>
+            <div className="sm:hidden w-full">
+              <GlobalSearch compact />
+            </div>
           </div>
         )}
 

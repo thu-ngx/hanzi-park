@@ -73,7 +73,7 @@ const MyCollectionPage = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search collection..."
                   className="h-9 pl-9 pr-3 w-56 text-sm rounded-lg border border-gray-300 bg-white
-                    focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary
+                    focus:outline-none focus:border-primary
                     placeholder:text-muted-foreground"
                 />
               </div>

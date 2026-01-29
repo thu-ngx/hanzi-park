@@ -182,8 +182,7 @@ const CharacterDetail = () => {
                         </p>
                         {data.decomposition && (
                           <div className="flex items-start gap-2 ml-4">
-                            {[...data.decomposition]
-                              .filter((char) => /\p{Script=Han}/u.test(char))
+                            {[...new Set([...data.decomposition].filter((char) => /\p{Script=Han}/u.test(char)))]
                               .map((char) => {
                                 const isSemantic =
                                   data.semanticRadical?.radical === char;

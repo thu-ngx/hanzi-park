@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import CharacterTile from "@/components/hanzi/CharacterTile";
 import GlobalSearch from "@/components/hanzi/GlobalSearch";
-import { Link } from "react-router";
 
 const HomePage = () => {
   return (

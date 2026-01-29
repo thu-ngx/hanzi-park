@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import Navbar from "@/components/Navbar";
-import { useCharacterStore } from "@/stores/useCharacterStore";
-import CharacterCard from "@/components/hanzi/CharacterCard";
-import SkeletonCard from "@/components/hanzi/SkeletonCard";
+import Navbar from "@/components/layout/Navbar";
+import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import CharacterCard from "@/features/character/components/CharacterCard";
+import SkeletonCard from "@/features/character/components/SkeletonCard";
 import { Search, Bookmark } from "lucide-react";
 
 const MyCollectionPage = () => {

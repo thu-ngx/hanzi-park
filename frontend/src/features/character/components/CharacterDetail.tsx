@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "@/lib/toast";
-import { useCharacterStore } from "@/stores/useCharacterStore";
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "./CharacterTile";
-import { characterService } from "@/services/characterService";
+import { characterService } from "@/features/character/services/characterService";
 
 const CharacterDetail = () => {
   const { activeCharacter, activeLoading, saveCharacter, savedCharacters } =
@@ -32,6 +32,7 @@ const CharacterDetail = () => {
         (c) => c.character === activeCharacter.character,
       );
       setNotes(saved?.notes || "");
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     } else {
       setNotes("");
     }

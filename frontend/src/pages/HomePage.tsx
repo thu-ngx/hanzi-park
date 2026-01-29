@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar";
-import CharacterTile from "@/components/hanzi/CharacterTile";
-import GlobalSearch from "@/components/hanzi/GlobalSearch";
+import Navbar from "@/components/layout/Navbar";
+import CharacterTile from "@/features/character/components/CharacterTile";
+import GlobalSearch from "@/features/character/components/GlobalSearch";
 
 const HomePage = () => {
   return (

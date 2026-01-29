@@ -1,8 +1,8 @@
-import { useAuthStore } from "@/stores/useAuthStore";
-import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useCharacterStore } from "@/features/character/store/useCharacterStore";
 import { useNavigate, useLocation } from "react-router";
 import { LogOut } from "lucide-react";
-import GlobalSearch from "./hanzi/GlobalSearch";
+import GlobalSearch from "@/features/character/components/GlobalSearch";
 
 const Navbar = () => {
   const { user, accessToken, logOut } = useAuthStore();

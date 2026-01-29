@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { Trash2 } from "lucide-react";
-import type { SavedCharacter } from "@/types/character";
+import type { SavedCharacter } from "@/features/character/types/character";
 
 interface CharacterCardProps {
     character: SavedCharacter;

@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { toast } from "@/lib/toast";
-import { characterService } from "@/services/characterService";
-import type { CharacterAnalysis, SavedCharacter } from "@/types/character";
+import { characterService } from "@/features/character/services/characterService";
+import type { CharacterAnalysis, SavedCharacter } from "@/features/character/types/character";
 
 interface CharacterState {
   // UI state

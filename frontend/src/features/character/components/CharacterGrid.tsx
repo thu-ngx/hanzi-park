@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import CharacterTile from "./CharacterTile";
-import type { RichFamilyCharacter, FrequencyBucketedFamily } from "@/types/character";
+import type { RichFamilyCharacter, FrequencyBucketedFamily } from "@/features/character/types/character";
 
 interface CharacterGridProps {
   title: string;

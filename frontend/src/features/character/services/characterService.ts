@@ -4,7 +4,7 @@ import type {
   SavedCharacter,
   DictionaryEntry,
   SearchResult,
-} from "@/types/character";
+} from "@/features/character/types/character";
 
 export const characterService = {
   // Character lookup endpoints (public - /api/characters)

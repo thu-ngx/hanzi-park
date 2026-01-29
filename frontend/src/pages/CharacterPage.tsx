@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useCharacterStore } from "@/stores/useCharacterStore";
-import Navbar from "@/components/Navbar";
-import CharacterDetail from "@/components/hanzi/CharacterDetail";
+import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import Navbar from "@/components/layout/Navbar";
+import CharacterDetail from "@/features/character/components/CharacterDetail";
 
 const CharacterPage = () => {
     const { char } = useParams<{ char: string }>();

@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/stores/useAuthStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 
@@ -29,6 +29,7 @@ const OptionalAuthLoader = () => {
 
   useEffect(() => {
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (starting || loading) {

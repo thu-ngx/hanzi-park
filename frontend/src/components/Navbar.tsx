@@ -46,7 +46,7 @@ const Navbar = () => {
         >
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold text-primary">字</span>
-            <span className="text-sm font-semibold text-foreground hidden sm:inline">
+            <span className="text-sm text-primary font-semibold hidden sm:inline">
               Hanzi Park
             </span>
           </div>

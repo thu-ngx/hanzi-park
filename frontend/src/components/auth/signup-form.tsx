@@ -61,9 +61,7 @@ export function SignupForm({
       <Card className="overflow-hidden border-gray-200">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Create your account</CardTitle>
-          <CardDescription>
-            Welcome! Sign up to start using Chatty
-          </CardDescription>
+          <CardDescription>Sign up to explore Hanzi world</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>

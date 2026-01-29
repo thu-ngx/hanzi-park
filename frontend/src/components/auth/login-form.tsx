@@ -54,7 +54,7 @@ export function LogInForm({
       <Card className="overflow-hidden border-gray-200">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back!</CardTitle>
-          <CardDescription>Log in your Chatty account</CardDescription>
+          <CardDescription>Log in your account</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>

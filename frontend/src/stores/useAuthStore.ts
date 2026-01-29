@@ -44,7 +44,7 @@ export const useAuthStore = create<authState>((set, get) => ({
 
       await get().fetchMe();
 
-      toast.success("Welcome back to Chatty!");
+      toast.success("Welcome back to Hanzi Park!");
     } catch (error) {
       console.error(error);
       toast.error("Failed to log in.");

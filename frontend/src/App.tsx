@@ -7,10 +7,12 @@ import MyCollectionPage from "./pages/MyCollectionPage";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import OptionalAuthLoader from "./components/auth/OptionalAuthLoader";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
     <>
+      <Analytics />
       <Toaster richColors />
       <BrowserRouter>
         <Routes>

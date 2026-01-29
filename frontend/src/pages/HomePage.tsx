@@ -64,7 +64,7 @@ const HomePage = () => {
                 className="text-primary hover:underline"
               >
                 Hanly
-              </a>
+              </a>{" "}
               and{" "}
               <a
                 href="https://hanzicraft.com/"

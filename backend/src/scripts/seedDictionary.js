@@ -36,7 +36,7 @@ function extractComponents(decomposition) {
 }
 
 async function seed() {
-  await mongoose.connect(process.env.MONGODB_CONNNECTION);
+  await mongoose.connect(process.env.MONGODB_CONNECTION);
   console.log("Connected to database.");
 
   const filePath = path.join(__dirname, "../../data/dictionary.txt");

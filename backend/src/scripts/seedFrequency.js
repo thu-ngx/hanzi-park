@@ -10,7 +10,7 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function seedFrequency() {
-  await mongoose.connect(process.env.MONGODB_CONNNECTION);
+  await mongoose.connect(process.env.MONGODB_CONNECTION);
   console.log("Connected to database.");
 
   // Parse SUBTLEX-CH-CHR.xlsx

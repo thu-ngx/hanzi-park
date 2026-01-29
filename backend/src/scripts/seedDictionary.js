@@ -3,16 +3,25 @@ import mongoose from "mongoose";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import DictionaryCharacter from "../models/DictionaryCharacter.js";
+import Character from "../models/Character.js";
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const IDS_OPERATORS = new Set([
-  "\u2FF0", "\u2FF1", "\u2FF2", "\u2FF3", "\u2FF4",
-  "\u2FF5", "\u2FF6", "\u2FF7", "\u2FF8", "\u2FF9",
-  "\u2FFA", "\u2FFB",
+  "\u2FF0",
+  "\u2FF1",
+  "\u2FF2",
+  "\u2FF3",
+  "\u2FF4",
+  "\u2FF5",
+  "\u2FF6",
+  "\u2FF7",
+  "\u2FF8",
+  "\u2FF9",
+  "\u2FFA",
+  "\u2FFB",
 ]);
 
 function extractComponents(decomposition) {
@@ -47,14 +56,14 @@ async function seed() {
     };
   });
 
-  await DictionaryCharacter.deleteMany({});
+  await Character.deleteMany({});
   console.log("Cleared existing dictionary characters.");
 
   const BATCH_SIZE = 1000;
   for (let i = 0; i < docs.length; i += BATCH_SIZE) {
-    await DictionaryCharacter.insertMany(docs.slice(i, i + BATCH_SIZE));
+    await Character.insertMany(docs.slice(i, i + BATCH_SIZE));
     console.log(
-      `Inserted ${Math.min(i + BATCH_SIZE, docs.length)} / ${docs.length}`
+      `Inserted ${Math.min(i + BATCH_SIZE, docs.length)} / ${docs.length}`,
     );
   }
 

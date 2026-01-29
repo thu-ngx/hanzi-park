@@ -6,7 +6,8 @@ import type {
   SearchResult,
 } from "@/types/character";
 
-export const hanziService = {
+export const characterService = {
+  // Character lookup endpoints (public - /api/characters)
   lookup: async (character: string): Promise<CharacterAnalysis> => {
     const res = await api.post("/characters/lookup", { character });
     return res.data;
@@ -19,27 +20,28 @@ export const hanziService = {
     return res.data;
   },
 
+  getDictionaryEntry: async (char: string): Promise<DictionaryEntry> => {
+    const res = await api.get(`/characters/${encodeURIComponent(char)}`);
+    return res.data;
+  },
+
+  // User notes endpoints (protected - /api/notes)
   getSaved: async (): Promise<SavedCharacter[]> => {
-    const res = await api.get("/characters/saved");
+    const res = await api.get("/notes");
     return res.data;
   },
 
   save: async (data: Partial<SavedCharacter>): Promise<SavedCharacter> => {
-    const res = await api.post("/characters/save", data);
+    const res = await api.post("/notes", data);
     return res.data;
   },
 
   updateNotes: async (id: string, notes: string): Promise<SavedCharacter> => {
-    const res = await api.put(`/characters/${id}/notes`, { notes });
+    const res = await api.put(`/notes/${id}/notes`, { notes });
     return res.data;
   },
 
   remove: async (id: string): Promise<void> => {
-    await api.delete(`/characters/${id}`);
-  },
-
-  getDictionaryEntry: async (char: string): Promise<DictionaryEntry> => {
-    const res = await api.get(`/dictionary/${encodeURIComponent(char)}`);
-    return res.data;
+    await api.delete(`/notes/${id}`);
   },
 };

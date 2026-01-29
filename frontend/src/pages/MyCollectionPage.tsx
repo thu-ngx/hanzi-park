@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Navbar from "@/components/Navbar";
-import { useHanziStore } from "@/stores/useHanziStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import CharacterCard from "@/components/hanzi/CharacterCard";
 import SkeletonCard from "@/components/hanzi/SkeletonCard";
 import { Search, Bookmark } from "lucide-react";
@@ -12,7 +12,7 @@ const MyCollectionPage = () => {
     loadSaved,
     removeCharacter,
     updateNotes,
-  } = useHanziStore();
+  } = useCharacterStore();
 
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editNotes, setEditNotes] = useState("");

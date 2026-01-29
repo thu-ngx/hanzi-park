@@ -1,12 +1,12 @@
 import { useAuthStore } from "@/stores/useAuthStore";
-import { useHanziStore } from "@/stores/useHanziStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useNavigate, useLocation } from "react-router";
 import { LogOut } from "lucide-react";
 import GlobalSearch from "./hanzi/GlobalSearch";
 
 const Navbar = () => {
   const { user } = useAuthStore();
-  const { resetExplorer } = useHanziStore();
+  const { resetExplorer } = useCharacterStore();
   const navigate = useNavigate();
   const location = useLocation();
   const { logOut } = useAuthStore();

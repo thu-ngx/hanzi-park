@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
-import { useHanziStore } from "@/stores/useHanziStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
-import { hanziService } from "@/services/hanziService";
+import { characterService } from "@/services/characterService";
 
 const CharacterDetail = () => {
   const navigate = useNavigate();
   const { activeCharacter, activeLoading, saveCharacter, savedCharacters } =
-    useHanziStore();
+    useCharacterStore();
 
   const [notes, setNotes] = useState("");
   const [parentCharacters, setParentCharacters] = useState<
@@ -35,7 +35,7 @@ const CharacterDetail = () => {
   // Fetch parent characters when activeCharacter changes
   useEffect(() => {
     if (activeCharacter) {
-      hanziService
+      characterService
         .getDictionaryEntry(activeCharacter.character)
         .then((entry) => {
           setParentCharacters(entry.parents || []);

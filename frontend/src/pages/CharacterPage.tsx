@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import { useHanziStore } from "@/stores/useHanziStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import Navbar from "@/components/Navbar";
 import CharacterDetail from "@/components/hanzi/CharacterDetail";
 
 const CharacterPage = () => {
     const { char } = useParams<{ char: string }>();
     const navigate = useNavigate();
-    const { pushCharacter } = useHanziStore();
+    const { pushCharacter } = useCharacterStore();
 
     // Fetch character data when URL param changes
     useEffect(() => {

@@ -1,52 +1,22 @@
 import mongoose from "mongoose";
 
-const characterSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-      index: true,
-    },
-    character: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    pinyin: {
-      type: String,
-      trim: true,
-    },
-    meaning: {
-      type: String,
-      trim: true,
-    },
-    semanticRadical: {
-      radical: { type: String },
-      meaning: { type: String },
-      pinyin: { type: String },
-    },
-    phoneticComponent: {
-      component: { type: String },
-      sound: { type: String },
-    },
-    frequencyRank: {
-      type: Number,
-    },
-    strokeCount: {
-      type: Number,
-    },
-    notes: {
-      type: String,
-      maxlength: 2000,
-    },
+const characterSchema = new mongoose.Schema({
+  character: { type: String, required: true, unique: true, index: true },
+  pinyin: [String],
+  definitions: [String],
+  decomposition: String,
+  components: [String],
+  etymology: {
+    type: { type: String },
+    phonetic: String,
+    semantic: String,
+    hint: String,
   },
-  {
-    timestamps: true,
-  },
-);
+  matches: [[String]],
+  frequencyRank: { type: Number, default: null },
+});
 
-// compound index: one user can save the same character only once
-characterSchema.index({ userId: 1, character: 1 }, { unique: true });
+characterSchema.index({ components: 1 });
+characterSchema.index({ frequencyRank: 1 });
 
 export default mongoose.model("Character", characterSchema);

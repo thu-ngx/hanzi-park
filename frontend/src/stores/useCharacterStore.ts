@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { toast } from "sonner";
-import { hanziService } from "@/services/hanziService";
+import { characterService } from "@/services/characterService";
 import type { CharacterAnalysis, SavedCharacter } from "@/types/character";
 
-interface HanziState {
+interface CharacterState {
   // UI state
   darkMode: boolean;
 
@@ -27,7 +27,7 @@ interface HanziState {
   removeCharacter: (id: string) => Promise<void>;
 }
 
-export const useHanziStore = create<HanziState>((set, get) => ({
+export const useCharacterStore = create<CharacterState>((set, get) => ({
   darkMode: false,
 
   activeCharacter: null,
@@ -45,7 +45,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
   pushCharacter: async (char) => {
     try {
       set({ activeLoading: true });
-      const result = await hanziService.lookup(char);
+      const result = await characterService.lookup(char);
       set({
         activeCharacter: result,
       });
@@ -65,7 +65,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
   loadSaved: async () => {
     try {
       set({ collectionLoading: true });
-      const chars = await hanziService.getSaved();
+      const chars = await characterService.getSaved();
       set({ savedCharacters: chars });
     } catch {
       toast.error("Failed to load saved characters");
@@ -76,7 +76,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
 
   saveCharacter: async (data, notes) => {
     try {
-      const saved = await hanziService.save({
+      const saved = await characterService.save({
         character: data.character,
         pinyin: data.pinyin,
         meaning: data.meaning,
@@ -95,7 +95,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
 
   updateNotes: async (id, notes) => {
     try {
-      const updated = await hanziService.updateNotes(id, notes);
+      const updated = await characterService.updateNotes(id, notes);
       set((s) => ({
         savedCharacters: s.savedCharacters.map((c) =>
           c._id === id ? updated : c
@@ -109,7 +109,7 @@ export const useHanziStore = create<HanziState>((set, get) => ({
 
   removeCharacter: async (id) => {
     try {
-      await hanziService.remove(id);
+      await characterService.remove(id);
       set((s) => ({
         savedCharacters: s.savedCharacters.filter((c) => c._id !== id),
       }));

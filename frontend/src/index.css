@@ -1,12 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
 @config "../tailwind.config.ts";
 
 @layer base {
   :root {
-    /* Base colors - FFFADE theme */
+    /* Base colors */
     --background: 48 100% 98%;
     --foreground: 0 0% 20%;
 
@@ -21,29 +20,18 @@
     /* Primary - Dark Green #06402B */
     --primary: 150 87% 13%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 150 70% 30%;
 
-    /* Secondary - warm light cream */
+    /* Secondary */
     --secondary: 48 100% 98%;
     --secondary-foreground: 150 87% 13%;
 
-    /* Muted - warm beige */
+    /* Muted */
     --muted: 48 80% 94%;
     --muted-foreground: 0 0% 50%;
 
-    /* Accent - same as primary for consistency */
+    /* Accent */
     --accent: 150 87% 13%;
     --accent-foreground: 0 0% 100%;
-
-    /* Chat colors */
-    --chat-bubble-sent: 150 87% 13%;
-    --chat-bubble-sent-foreground: 0 0% 100%;
-    --chat-bubble-received: 38 25% 94%;
-    --chat-bubble-received-foreground: 0 0% 20%;
-
-    /* Status colors */
-    --online: 145 80% 50%;
-    --offline: 0 0% 70%;
 
     /* Warning */
     --warning: 37.7 92.1% 50.2%;
@@ -65,121 +53,8 @@
     /* Design system values */
     --radius: 1rem;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 80%, 20%)
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 75%, 22%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 80%, 20%)
-    );
-
-    --gradient-glass: linear-gradient(
-      135deg,
-      hsl(0, 0%, 100%) 0%,
-      hsl(0, 0%, 99%) 100%
-    );
-
-    /* Subtle gradient */
-    --gradient-teal: radial-gradient(
-      125% 125% at 50% 10%,
-      hsla(0, 0%, 100%, 1) 40%,
-      hsla(150, 30%, 96%, 0.3) 100%
-    );
-
-    /* Shadows - subtle light shadows */
+    /* Shadows */
     --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.08);
-    --shadow-glow: 0 0 0px hsl(var(--primary) / 0);
-    --shadow-bubble: 0 2px 8px hsl(0 0% 0% / 0.06);
-
-    /* Sidebar */
-    --sidebar-background: 0 0% 98.5%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 150 87% 13%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 150 87% 13%;
-    --sidebar-border: 0 0% 88%;
-    --sidebar-ring: 150 87% 13%;
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  }
-
-  .dark {
-    /* Not using dark mode anymore, but keeping for compatibility */
-    --background: 0 0% 98.5%;
-    --foreground: 0 0% 20%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
-    --primary: 150 87% 13%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 150 70% 30%;
-    --secondary: 0 0% 98.5%;
-    --secondary-foreground: 150 87% 13%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 50%;
-    --accent: 150 87% 13%;
-    --accent-foreground: 0 0% 100%;
-    --chat-bubble-sent: 150 87% 13%;
-    --chat-bubble-sent-foreground: 0 0% 100%;
-    --chat-bubble-received: 0 0% 96%;
-    --chat-bubble-received-foreground: 0 0% 20%;
-    --online: 145 80% 50%;
-    --away: 45 100% 65%;
-    --offline: 0 0% 70%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 88%;
-    --input: 0 0% 95%;
-    --ring: 150 87% 13%;
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 80%, 20%)
-    );
-    --gradient-chat: linear-gradient(
-      135deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 75%, 22%)
-    );
-    --gradient-accent: linear-gradient(
-      90deg,
-      hsl(150, 87%, 13%),
-      hsl(150, 80%, 20%)
-    );
-    --gradient-glass: linear-gradient(
-      135deg,
-      hsl(0, 0%, 98.5%) 0%,
-      hsl(0, 0%, 97%) 100%
-    );
-    --gradient-teal: radial-gradient(
-      125% 125% at 50% 10%,
-      hsla(0, 0%, 100%, 1) 40%,
-      hsla(150, 30%, 96%, 0.3) 100%
-    );
-    --shadow-soft: 0 2px 8px hsl(0 0% 0% / 0.08);
-    --shadow-glow: 0 0 0px hsl(var(--primary) / 0);
-    --shadow-bubble: 0 2px 8px hsl(0 0% 0% / 0.06);
-    --sidebar-background: 0 0% 98.5%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 150 87% 13%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 150 87% 13%;
-    --sidebar-border: 0 0% 88%;
-    --sidebar-ring: 150 87% 13%;
   }
 
   body {
@@ -195,105 +70,15 @@ input:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Chat App Utility Classes */
+/* Chinese font family */
+.font-chinese {
+  font-family: "Microsoft YaHei", "PingFang SC", "Heiti SC", sans-serif;
+  font-weight: 400;
+}
+
 @layer components {
-  .glass {
-    @apply bg-slate-50/50 backdrop-blur-sm border border-gray-200/50;
-  }
-
-  .dark .glass {
-    @apply bg-slate-50/50 backdrop-blur-sm border border-gray-200/50;
-  }
-
-  .glass-strong {
-    @apply backdrop-blur-md bg-slate-50 border border-gray-200/70;
-  }
-
-  /* Chat bubble variants */
-  .chat-bubble-sent {
-    @apply bg-primary text-primary-foreground shadow-soft;
-  }
-
-  .chat-bubble-received {
-    @apply bg-muted text-muted-foreground border border-gray-200;
-  }
-
-  /* Status indicators */
-  .status-online {
-    @apply bg-online;
-  }
-
-  .status-offline {
-    @apply bg-offline;
-  }
-
-  /* Gradient backgrounds */
-  .bg-gradient-primary {
-    background: var(--gradient-primary);
-  }
-
-  .bg-gradient-chat {
-    background: var(--gradient-chat);
-  }
-
-  .bg-gradient-accent {
-    background: var(--gradient-accent);
-  }
-
-  .bg-gradient-glass {
-    background: var(--gradient-glass);
-  }
-
-  .bg-gradient-teal {
-    background: var(--gradient-teal);
-  }
-
   /* Shadows */
   .shadow-soft {
     box-shadow: var(--shadow-soft);
-  }
-
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
-  }
-
-  .shadow-bubble {
-    box-shadow: var(--shadow-bubble);
-  }
-
-  /* Animations */
-  .transition-bounce {
-    transition: var(--transition-bounce);
-  }
-
-  .transition-smooth {
-    transition: var(--transition-smooth);
-  }
-
-  /* Pulse ring for unread messages */
-  .pulse-ring {
-    @apply relative;
-  }
-
-  .pulse-ring::before {
-    content: "";
-    @apply absolute inset-0 rounded-full bg-primary/30 animate-ping duration-[2000];
-  }
-
-  /* Message bounce in animation */
-  .message-bounce {
-    animation: messageSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55)
-      forwards;
-  }
-
-  @keyframes messageSlideIn {
-    0% {
-      opacity: 0;
-      transform: translateY(20px) scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
   }
 }

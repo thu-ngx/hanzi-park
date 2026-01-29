@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
+import CharacterTile from "./CharacterTile";
 import { characterService } from "@/services/characterService";
 
 const CharacterDetail = () => {
-  const navigate = useNavigate();
   const { activeCharacter, activeLoading, saveCharacter, savedCharacters } =
     useCharacterStore();
 
@@ -19,6 +18,9 @@ const CharacterDetail = () => {
       frequencyRank?: number | null;
     }>
   >([]);
+  const [decompositionData, setDecompositionData] = useState<
+    Map<string, { pinyin: string[]; meaning: string | null }>
+  >(new Map());
 
   // Load saved notes when activeCharacter changes
   useEffect(() => {
@@ -32,20 +34,57 @@ const CharacterDetail = () => {
     }
   }, [activeCharacter, savedCharacters]);
 
-  // Fetch parent characters when activeCharacter changes
+  // Fetch parent characters and decomposition data when activeCharacter changes
   useEffect(() => {
-    if (activeCharacter) {
-      characterService
-        .getDictionaryEntry(activeCharacter.character)
-        .then((entry) => {
-          setParentCharacters(entry.parents || []);
-        })
-        .catch(() => {
-          setParentCharacters([]);
-        });
-    } else {
+    if (!activeCharacter) {
       setParentCharacters([]);
+      setDecompositionData(new Map());
+      return;
     }
+
+    // Fetch parent characters
+    characterService
+      .getDictionaryEntry(activeCharacter.character)
+      .then((entry) => {
+        setParentCharacters(entry.parents || []);
+      })
+      .catch(() => {
+        setParentCharacters([]);
+      });
+
+    // Fetch decomposition character data in parallel
+    const decomposition = activeCharacter.decomposition;
+    if (!decomposition) {
+      setDecompositionData(new Map());
+      return;
+    }
+
+    const hanChars = [...decomposition].filter((char) =>
+      /\p{Script=Han}/u.test(char),
+    );
+
+    // Fetch all characters in parallel for low latency
+    Promise.all(
+      hanChars.map((char) =>
+        characterService
+          .getDictionaryEntry(char)
+          .then((entry) => ({
+            char,
+            pinyin: entry.pinyin,
+            meaning: entry.definitions?.[0] || null,
+          }))
+          .catch(() => ({ char, pinyin: [] as string[], meaning: null })),
+      ),
+    ).then((results) => {
+      const map = new Map<
+        string,
+        { pinyin: string[]; meaning: string | null }
+      >();
+      for (const { char, pinyin, meaning } of results) {
+        map.set(char, { pinyin, meaning });
+      }
+      setDecompositionData(map);
+    });
   }, [activeCharacter]);
 
   // Bucket parent characters by frequency (memoized for performance)
@@ -118,7 +157,7 @@ const CharacterDetail = () => {
                       />
                       {/* Decomposition */}
                       {data.decomposition && (
-                        <div className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200">
+                        <div className="w-fit mx-auto ">
                           <p className="font-mono text-base text-gray-800">
                             {data.decomposition}
                           </p>
@@ -127,9 +166,42 @@ const CharacterDetail = () => {
                     </div>
 
                     <div className="flex-1 text-center md:text-left space-y-3">
-                      <p className="text-3xl font-semibold text-gray-700">
-                        {data.pinyin}
-                      </p>
+                      <div className="flex items-center justify-center md:justify-start">
+                        <p className="text-2xl text-gray-700">
+                          <span className="font-chinese">{data.character}</span>{" "}
+                          <span className="italic">{data.pinyin}</span>
+                        </p>
+                        {data.decomposition && (
+                          <div className="flex items-start gap-2 ml-4">
+                            {[...data.decomposition]
+                              .filter((char) => /\p{Script=Han}/u.test(char))
+                              .map((char) => {
+                                const isSemantic =
+                                  data.semanticRadical?.radical === char;
+                                const isPhonetic =
+                                  data.phoneticComponent?.component === char;
+                                const charData = decompositionData.get(char);
+
+                                return (
+                                  <CharacterTile
+                                    key={char}
+                                    char={char}
+                                    pinyin={charData?.pinyin}
+                                    meaning={charData?.meaning}
+                                    role={
+                                      isSemantic
+                                        ? "semantic"
+                                        : isPhonetic
+                                          ? "phonetic"
+                                          : undefined
+                                    }
+                                    variant="inline"
+                                  />
+                                );
+                              })}
+                          </div>
+                        )}
+                      </div>
                       <p className="text-xl text-gray-600">{data.meaning}</p>
                       {data.etymology?.hint && (
                         <div className=" text-amber-700">
@@ -152,74 +224,8 @@ const CharacterDetail = () => {
               </div>
             </div>
 
-            {/* Right: Radical & Component cards */}
+            {/* Right: Notes + Save */}
             <div className="space-y-6">
-              {/* Semantic Radical */}
-              {data.semanticRadical && (
-                <div
-                  className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 cursor-pointer hover:opacity-75 transition-opacity"
-                  onClick={() =>
-                    navigate(`/character/${data.semanticRadical!.radical}`)
-                  }
-                >
-                  <h3 className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-2">
-                    Semantic Radical
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl font-bold text-emerald-800">
-                      {data.semanticRadical?.radical}
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-emerald-900">
-                        {data.semanticRadical?.meaning}
-                      </p>
-                      {data.semanticRadical?.pinyin && (
-                        <p className="text-xs text-emerald-600">
-                          {data.semanticRadical.pinyin}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Phonetic Component */}
-              {data.phoneticComponent && (
-                <div
-                  className="p-4 rounded-xl bg-blue-50 border border-blue-200 cursor-pointer hover:opacity-75 transition-opacity"
-                  onClick={() =>
-                    navigate(`/character/${data.phoneticComponent!.component}`)
-                  }
-                >
-                  <h3 className="text-xs font-semibold text-blue-700 uppercase tracking-wider mb-2">
-                    Phonetic Component
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <span className="text-4xl font-bold text-blue-800">
-                      {data.phoneticComponent?.component}
-                    </span>
-                    <div>
-                      {data.phoneticComponent?.meaning && (
-                        <p className="text-sm font-semibold text-blue-900">
-                          {data.phoneticComponent.meaning}
-                        </p>
-                      )}
-                      {data.phoneticComponent?.pinyin && (
-                        <p className="text-xs text-blue-600">
-                          {data.phoneticComponent.pinyin}
-                        </p>
-                      )}
-                      {!data.phoneticComponent?.meaning &&
-                        !data.phoneticComponent?.pinyin && (
-                          <p className="text-sm font-semibold text-blue-900">
-                            Sound: {data.phoneticComponent?.sound}
-                          </p>
-                        )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Notes + Save */}
               <div className="p-6 rounded-xl bg-white border border-gray-200 space-y-3">
                 <h3 className="text-sm font-semibold text-gray-700">
@@ -244,14 +250,17 @@ const CharacterDetail = () => {
             </div>
           </div>
 
-          {/* Related characters - Full width below */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Phonetic Family */}
-            <CharacterGrid title={`Phonetic Family ${data.phoneticComponent?.component ?? ""}`} data={data.phoneticFamily} />
+          {/* Phonetic Family */}
+          <CharacterGrid
+            title={`Phonetic Family ${data.phoneticComponent?.component ?? ""}`}
+            data={data.phoneticFamily}
+          />
 
-            {/* Semantic Family */}
-            <CharacterGrid title={`Semantic Family ${data.semanticRadical?.radical ?? ""}`} data={data.semanticFamily} />
-          </div>
+          {/* Semantic Family */}
+          <CharacterGrid
+            title={`Semantic Family ${data.semanticRadical?.radical ?? ""}`}
+            data={data.semanticFamily}
+          />
 
           {/* Parent Characters */}
           <CharacterGrid

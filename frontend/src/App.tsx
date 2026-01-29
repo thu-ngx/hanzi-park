@@ -6,6 +6,7 @@ import CharacterPage from "./pages/CharacterPage";
 import MyCollectionPage from "./pages/MyCollectionPage";
 import { Toaster } from "sonner";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import OptionalAuthLoader from "./components/auth/OptionalAuthLoader";
 
 function App() {
   return (
@@ -13,13 +14,16 @@ function App() {
       <Toaster richColors />
       <BrowserRouter>
         <Routes>
-          {/* public routes */}
+          {/* public routes (no auth required) */}
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LogInPage />} />
-          {/* protected routes */}
-          <Route element={<ProtectedRoute />}>
+          {/* public routes with optional auth (loads user if logged in) */}
+          <Route element={<OptionalAuthLoader />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/character/:char" element={<CharacterPage />} />
+          </Route>
+          {/* protected routes (auth required) */}
+          <Route element={<ProtectedRoute />}>
             <Route path="/collection" element={<MyCollectionPage />} />
           </Route>
         </Routes>

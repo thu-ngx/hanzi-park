@@ -5,28 +5,31 @@ import { LogOut } from "lucide-react";
 import GlobalSearch from "./hanzi/GlobalSearch";
 
 const Navbar = () => {
-  const { user } = useAuthStore();
+  const { user, accessToken, logOut } = useAuthStore();
   const { resetExplorer } = useCharacterStore();
   const navigate = useNavigate();
   const location = useLocation();
-  const { logOut } = useAuthStore();
 
-  const isExplorerActive =
-    location.pathname === "/" || location.pathname.startsWith("/character");
+  const isHomePage = location.pathname === "/";
   const isCollectionActive = location.pathname === "/collection";
+  const isLoggedIn = !!accessToken;
 
-  const handleExplorerClick = () => {
+  const handleLogoClick = () => {
     resetExplorer();
     navigate("/");
   };
 
   const handleCollectionClick = () => {
-    resetExplorer(); // Clear any active character so collection shows immediately
+    resetExplorer();
     navigate("/collection");
   };
 
   const handleLogout = async () => {
     await logOut();
+    navigate("/");
+  };
+
+  const handleLogin = () => {
     navigate("/login");
   };
 
@@ -38,7 +41,7 @@ const Navbar = () => {
           href="/"
           onClick={(e) => {
             e.preventDefault();
-            handleExplorerClick();
+            handleLogoClick();
           }}
         >
           <div className="flex items-center gap-2">
@@ -49,47 +52,54 @@ const Navbar = () => {
           </div>
         </a>
 
-        {/* Center: Search */}
-        <div className="flex-1 flex justify-center max-w-md mx-4">
-          <GlobalSearch />
-        </div>
+        {/* Center: Search (only show when not on home page) */}
+        {!isHomePage && (
+          <div className="flex-1 flex justify-center max-w-md mx-4">
+            <GlobalSearch />
+          </div>
+        )}
 
-        {/* Navigation */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleExplorerClick}
-            className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${isExplorerActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground hover:bg-gray-100"
-              }`}
-          >
-            Explorer
-          </button>
-          <button
-            onClick={handleCollectionClick}
-            className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${isCollectionActive
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground hover:bg-gray-100"
-              }`}
-          >
-            My Collection
-          </button>
-        </div>
-
-        {/* Right: Display name + Logout */}
+        {/* Navigation + Auth */}
         <div className="flex items-center gap-3">
-          {user && (
-            <span className="text-sm font-medium text-foreground">
-              {user.username}
-            </span>
+          {isLoggedIn ? (
+            <>
+              {/* My Collection - only when logged in */}
+              <button
+                onClick={handleCollectionClick}
+                className={`px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
+                  isCollectionActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-gray-100"
+                }`}
+              >
+                My Collection
+              </button>
+
+              {/* Username */}
+              {user && (
+                <span className="text-sm font-medium text-foreground">
+                  {user.username}
+                </span>
+              )}
+
+              {/* Logout button */}
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-lg hover:bg-gray-100 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                title="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </>
+          ) : (
+            /* Login button - only when not logged in */
+            <button
+              onClick={handleLogin}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
+            >
+              Login
+            </button>
           )}
-          <button
-            onClick={handleLogout}
-            className="p-2 rounded-lg hover:bg-gray-100 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-            title="Logout"
-          >
-            <LogOut className="w-5 h-5" />
-          </button>
         </div>
       </div>
     </nav>

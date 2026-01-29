@@ -22,8 +22,6 @@ import { useNavigate } from "react-router";
 
 const signUpSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
     username: z.string().min(3, "Username must be at least 3 characters"),
     email: z.email("Email is invalid"),
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -51,9 +49,9 @@ export function SignupForm({
   });
 
   const onSubmit = async (data: SignUpFormValues) => {
-    const { username, email, password, firstName, lastName } = data;
+    const { username, email, password } = data;
     // call api to sign up
-    await signUp(username, email, password, firstName, lastName);
+    await signUp(username, email, password);
 
     navigate("/login");
   };
@@ -70,36 +68,6 @@ export function SignupForm({
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FieldGroup className="gap-4">
-              <Field>
-                <Field className="grid grid-cols-2 gap-4">
-                  <Field>
-                    <FieldLabel htmlFor="firstName">First Name</FieldLabel>
-                    <Input
-                      id="firstName"
-                      type="text"
-                      {...register("firstName")}
-                    />
-                    {errors.firstName && (
-                      <p className="text-destructive text-sm ">
-                        {errors.firstName?.message}
-                      </p>
-                    )}
-                  </Field>
-                  <Field>
-                    <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
-                    <Input
-                      id="lastName"
-                      type="text"
-                      {...register("lastName")}
-                    />
-                    {errors.lastName && (
-                      <p className="text-destructive text-sm ">
-                        {errors.lastName?.message}
-                      </p>
-                    )}
-                  </Field>
-                </Field>
-              </Field>
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input id="username" type="text" {...register("username")} />

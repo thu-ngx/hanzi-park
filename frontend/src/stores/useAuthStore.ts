@@ -16,12 +16,12 @@ export const useAuthStore = create<authState>((set, get) => ({
     set({ accessToken: null, user: null, loading: false });
   },
 
-  signUp: async (username, email, password, firstName, lastName) => {
+  signUp: async (username, email, password) => {
     try {
       set({ loading: true });
 
       // call api
-      await authService.signUp(username, email, password, firstName, lastName);
+      await authService.signUp(username, email, password);
 
       toast.success(
         "Sign up successfully! You will be redirected to log in page",

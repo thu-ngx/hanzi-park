@@ -9,12 +9,12 @@ const REFRESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days in ms
 
 export const signUp = async (req, res) => {
   try {
-    const { username, password, email, firstName, lastName } = req.body;
+    const { username, password, email } = req.body;
 
     // check if missing input
-    if (!username || !password || !email || !firstName || !lastName) {
+    if (!username || !password || !email) {
       return res.status(400).json({
-        message: "Username, password, email, firstname or lastname is missing",
+        message: "Username, password or email is missing",
       });
     }
 
@@ -32,7 +32,6 @@ export const signUp = async (req, res) => {
       username,
       hashedPassword,
       email,
-      displayName: `${firstName} ${lastName}`,
     });
 
     // return
@@ -97,7 +96,7 @@ export const logIn = async (req, res) => {
     // return access token in respond
     return res
       .status(200)
-      .json({ message: `User ${user.displayName} has logged in`, accessToken });
+      .json({ message: `User ${user.username} has logged in`, accessToken });
   } catch (error) {
     console.error("Error when calling logIn", error);
     return res.status(500).json({ message: "System error" });

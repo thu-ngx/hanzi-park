@@ -10,7 +10,7 @@ import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
 import type { CharacterAnalysis } from "../../types/character";
-import { useNoteStore } from "../../store/useNoteStore";
+import { useNotes, useAddNote, useUpdateNote } from "../../hooks/useNote";
 
 interface CharacterDetailProps {
   data: CharacterAnalysis | null | undefined;
@@ -18,18 +18,20 @@ interface CharacterDetailProps {
 }
 
 const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
-  const { save, updateNotes, findByChar } = useNoteStore();
   const { accessToken } = useAuthStore();
 
-  // Custom hooks for related data
+  const { data: allNotes } = useNotes();
+  const addNote = useAddNote();
+  const updateNote = useUpdateNote();
+
   const bucketedParents = useParentCharacters(data?.character);
   const decompositionData = useDecompositionData(data?.decomposition);
 
-  // Get saved character and notes
+  // Find if the current character is already saved
   const savedCharacter = useMemo(() => {
-    if (!data) return null;
-    return findByChar(data.character);
-  }, [data, findByChar]);
+    if (!data || !allNotes) return null;
+    return allNotes.find((n) => n.character === data.character);
+  }, [data, allNotes]);
 
   const savedNotes = savedCharacter?.notes || "";
 
@@ -149,9 +151,12 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
 
                     // If character is already saved, update notes; otherwise save new
                     if (savedCharacter) {
-                      updateNotes(savedCharacter._id, notesValue);
+                      updateNote.mutate({
+                        id: savedCharacter._id,
+                        notes: notesValue,
+                      });
                     } else {
-                      save(data, notesValue);
+                      addNote.mutate({ data, notes: notesValue });
                     }
                   }}
                 />

@@ -1,20 +1,20 @@
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Navbar from "@/components/layout/Navbar";
-import { useEditableNotes } from "@/features/character/hooks";
 import CharacterCard from "@/features/character/components/card/CharacterCard";
 import SkeletonCard from "@/features/character/components/card/SkeletonCard";
 import { Search, Bookmark } from "lucide-react";
-import { useNoteStore } from "@/features/character/store/useNoteStore";
+import {
+  useNotes,
+  useDeleteNote,
+  useUpdateNote,
+} from "@/features/character/hooks/useNote";
 
 const MyCollectionPage = () => {
-  const { characters, isLoading, load, remove } = useNoteStore();
-  const notesEditor = useEditableNotes();
+  const { data: characters = [], isLoading } = useNotes();
+  const deleteNote = useDeleteNote();
+  const updateNote = useUpdateNote();
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    load();
-  }, [load]);
 
   const filtered = useMemo(() => {
     if (!searchQuery) return characters;
@@ -80,8 +80,10 @@ const MyCollectionPage = () => {
                 <CharacterCard
                   key={char._id}
                   character={char}
-                  onRemove={remove}
-                  onSaveNotes={(notes) => notesEditor.saveEdit(char._id, notes)}
+                  onRemove={(id) => deleteNote.mutate(id)}
+                  onSaveNotes={(notes) =>
+                    updateNote.mutate({ id: char._id, notes })
+                  }
                 />
               ))}
             </div>

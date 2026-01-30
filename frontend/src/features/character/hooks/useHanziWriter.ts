@@ -26,6 +26,7 @@ export function useHanziWriter(
         if (!container || !character) return;
 
         // Reset error state for new character
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         setHasError(false);
 
         // Cancel any ongoing animation before clearing

@@ -20,20 +20,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
-    avatarUrl: {
-      type: String, // link CDN to display image
-    },
-    avatarId: {
-      type: String, // Cloudinary public_id to delete image
-    },
-    bio: {
-      type: String,
-      maxlength: 500,
-    },
-    phone: {
-      type: String,
-      sparse: true, // allow null, but must be unique
-    },
   },
   {
     timestamps: true,

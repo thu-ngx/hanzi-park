@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 
 const OptionalAuthLoader = () => {
-  const { accessToken, user, loading, refresh, fetchMe } = useAuthStore();
+  const { accessToken, user, isLoading, refresh, fetchMe } = useAuthStore();
   const [starting, setStarting] = useState(true);
 
   const init = async () => {
@@ -32,7 +32,7 @@ const OptionalAuthLoader = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (starting || loading) {
+  if (starting || isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         Loading...

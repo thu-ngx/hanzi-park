@@ -50,10 +50,10 @@ export function SignupForm({
 
   const onSubmit = async (data: SignUpFormValues) => {
     const { username, email, password } = data;
-    // call api to sign up
-    await signUp(username, email, password);
-
-    navigate("/login");
+    const success = await signUp(username, email, password);
+    if (success) {
+      navigate("/login");
+    }
   };
 
   return (

@@ -6,50 +6,47 @@ import type { authState } from "@/types/store";
 export const useAuthStore = create<authState>((set, get) => ({
   accessToken: null,
   user: null,
-  loading: false,
+  isLoading: false,
 
   setAccessToken: (accessToken) => {
     set({ accessToken });
   },
 
   clearState: () => {
-    set({ accessToken: null, user: null, loading: false });
+    set({ accessToken: null, user: null, isLoading: false });
   },
 
   signUp: async (username, email, password) => {
     try {
-      set({ loading: true });
-
-      // call api
+      set({ isLoading: true });
       await authService.signUp(username, email, password);
-
       toast.success(
         "Sign up successfully! You will be redirected to log in page",
       );
+      return true;
     } catch (error) {
       console.error(error);
       toast.error("Failed to sign up.");
+      return false;
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   },
 
   logIn: async (username, password) => {
     try {
-      set({ loading: true });
-
-      // call api & set access token
+      set({ isLoading: true });
       const { accessToken } = await authService.logIn(username, password);
-      get().setAccessToken(accessToken)
-
+      get().setAccessToken(accessToken);
       await get().fetchMe();
-
       toast.success("Welcome back to Hanzi Park!");
+      return true;
     } catch (error) {
       console.error(error);
       toast.error("Failed to log in.");
+      return false;
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   },
 
@@ -62,13 +59,13 @@ export const useAuthStore = create<authState>((set, get) => ({
       console.error(error);
       toast.error("Failed to log out. Try again.");
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   },
 
   fetchMe: async () => {
     try {
-      set({ loading: true });
+      set({ isLoading: true });
       const user = await authService.fetchMe();
       set({ user });
     } catch (error) {
@@ -76,30 +73,30 @@ export const useAuthStore = create<authState>((set, get) => ({
       set({ accessToken: null, user: null });
       toast.error("Error when fetching user data. Try again");
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   },
 
   refresh: async (options) => {
     try {
-      set({ loading: true });
+      set({ isLoading: true });
       const { user, fetchMe, setAccessToken } = get();
       const accessToken = await authService.refresh();
-
       setAccessToken(accessToken);
 
       if (!user) {
         await fetchMe();
       }
+      return true;
     } catch (error) {
       console.error(error);
-      // Only show error toast if not in silent mode (used for optional auth flows)
       if (!options?.silent) {
         toast.error("Your session has expired. Please log in again");
       }
       get().clearState();
+      return false;
     } finally {
-      set({ loading: false });
+      set({ isLoading: false });
     }
   },
 }));

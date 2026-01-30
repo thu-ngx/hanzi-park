@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router";
 
 const ProtectedRoute = () => {
-  const { accessToken, user, loading, refresh, fetchMe } = useAuthStore();
+  const { accessToken, user, isLoading, refresh, fetchMe } = useAuthStore();
   const [starting, setStarting] = useState(true);
 
   const init = async () => {
@@ -24,7 +24,7 @@ const ProtectedRoute = () => {
     init();
   }, []);
 
-  if (starting || loading) {
+  if (starting || isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         Loading...

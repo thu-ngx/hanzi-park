@@ -44,9 +44,10 @@ export function LogInForm({
 
   const onSubmit = async (data: LogInFormValues) => {
     const { username, password } = data;
-    // call api to log in
-    await logIn(username, password);
-    navigate("/");
+    const success = await logIn(username, password);
+    if (success) {
+      navigate("/");
+    }
   };
 
   return (

@@ -1,16 +1,16 @@
 import { useMemo } from "react";
 import { toast } from "@/lib/toast";
-import { useCollectionStore } from "@/features/character/store";
 import {
   useParentCharacters,
   useDecompositionData,
 } from "@/features/character/hooks";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import StrokeOrderAnimation from "./StrokeOrderAnimation";
+import StrokeOrderAnimation from "../display/StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
-import CharacterTile from "./CharacterTile";
-import NoteCapture from "./note/NoteCapture";
-import type { CharacterAnalysis } from "../types/character";
+import CharacterTile from "../display/CharacterTile";
+import NoteCapture from "../note/NoteCapture";
+import type { CharacterAnalysis } from "../../types/character";
+import { useCollectionStore } from "../../store/useCollectionStore";
 
 interface CharacterDetailProps {
   data: CharacterAnalysis | null | undefined;

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { RotateCcw } from "lucide-react";
-import { useHanziWriter } from "../hooks/useHanziWriter";
+import { useHanziWriter } from "../../hooks/useHanziWriter";
 
 interface StrokeOrderAnimationProps {
   character: string;

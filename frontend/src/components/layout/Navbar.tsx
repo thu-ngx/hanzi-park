@@ -1,6 +1,6 @@
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useNavigate, useLocation } from "react-router";
-import GlobalSearch from "@/features/character/components/GlobalSearch";
+import GlobalSearch from "@/features/character/components/search/GlobalSearch";
 import { Button } from "@/components/ui/button";
 import BrandLogo from "@/components/layout/BrandLogo";
 import { UserAccountNav } from "@/components/layout/UserAccountNav";

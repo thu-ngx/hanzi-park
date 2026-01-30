@@ -1,7 +1,7 @@
 import { useParams, Navigate } from "react-router";
 import { useCharacterLookup } from "@/features/character/hooks";
 import Navbar from "@/components/layout/Navbar";
-import CharacterDetail from "@/features/character/components/CharacterDetail";
+import CharacterDetail from "@/features/character/components/detail/CharacterDetail";
 
 const CharacterPage = () => {
   const { char } = useParams<{ char: string }>();

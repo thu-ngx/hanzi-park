@@ -1,9 +1,9 @@
 import { Link } from "react-router";
 import { Trash2, Pencil } from "lucide-react";
 import type { SavedCharacter } from "@/features/character/types/character";
-import CharacterTags from "./CharacterTags";
+import CharacterTags from "../display/CharacterTags";
 import { Button } from "@/components/ui/button";
-import EditNoteDialog from "./note/EditNoteDialog";
+import EditNoteDialog from "../note/EditNoteDialog";
 
 interface CharacterCardProps {
   character: SavedCharacter;

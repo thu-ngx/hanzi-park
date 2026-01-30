@@ -1,6 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
-import CharacterTile from "@/features/character/components/CharacterTile";
-import GlobalSearch from "@/features/character/components/GlobalSearch";
+import CharacterTile from "@/features/character/components/display/CharacterTile";
+import GlobalSearch from "@/features/character/components/search/GlobalSearch";
 import { useExampleCharacters } from "@/features/character/hooks/useExampleCharacters";
 
 const HomePage = () => {

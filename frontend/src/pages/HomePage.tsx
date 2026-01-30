@@ -1,8 +1,11 @@
 import Navbar from "@/components/layout/Navbar";
 import CharacterTile from "@/features/character/components/CharacterTile";
 import GlobalSearch from "@/features/character/components/GlobalSearch";
+import { useExampleCharacters } from "@/features/character/hooks/useExampleCharacters";
 
 const HomePage = () => {
+  const { exampleChars, exampleCharsList } = useExampleCharacters();
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Navbar */}
@@ -32,8 +35,13 @@ const HomePage = () => {
               Try these characters:
             </p>
             <div className="flex justify-center gap-2 sm:gap-3 flex-wrap px-2">
-              {["清", "想", "妈", "红", "房", "船"].map((char) => (
-                <CharacterTile key={char} char={char} />
+              {exampleCharsList.map((char) => (
+                <CharacterTile
+                  key={char}
+                  char={char}
+                  pinyin={exampleChars[char]?.pinyin}
+                  meaning={exampleChars[char]?.meaning}
+                />
               ))}
             </div>
           </div>

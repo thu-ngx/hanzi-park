@@ -1,15 +1,19 @@
-import { useState, useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { toast } from "@/lib/toast";
 import { useCollectionStore } from "@/features/character/store";
-import { useParentCharacters, useDecompositionData } from "@/features/character/hooks";
+import {
+  useParentCharacters,
+  useDecompositionData,
+} from "@/features/character/hooks";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "./CharacterTile";
+import DetailNoteEditor from "./note/DetailNoteEditor";
 import type { CharacterAnalysis } from "../types/character";
 
 interface CharacterDetailProps {
-  data: CharacterAnalysis | null;
+  data: CharacterAnalysis | null | undefined;
   isLoading: boolean;
 }
 
@@ -28,25 +32,7 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
     return saved?.notes || "";
   }, [data, findByChar]);
 
-  // Local notes state
-  const [notes, setNotes] = useState("");
-
-  useEffect(() => {
-    setNotes(savedNotes);
-  }, [data?.character, savedNotes]); // Only run when character or savedNotes changes
-
   if (!data && !isLoading) return null;
-
-  const handleSave = () => {
-    if (!data) return;
-
-    if (!accessToken) {
-      toast.info("Please log in to save notes to your collection");
-      return;
-    }
-
-    save(data, notes);
-  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -90,31 +76,36 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                         </p>
                         {data.decomposition && (
                           <div className="flex items-start gap-2 ml-4">
-                            {[...new Set([...data.decomposition].filter((char) => /\p{Script=Han}/u.test(char)))]
-                              .map((char) => {
-                                const isSemantic =
-                                  data.semanticRadical?.radical === char;
-                                const isPhonetic =
-                                  data.phoneticComponent?.component === char;
-                                const charData = decompositionData.get(char);
+                            {[
+                              ...new Set(
+                                [...data.decomposition].filter((char) =>
+                                  /\p{Script=Han}/u.test(char),
+                                ),
+                              ),
+                            ].map((char) => {
+                              const isSemantic =
+                                data.semanticRadical?.radical === char;
+                              const isPhonetic =
+                                data.phoneticComponent?.component === char;
+                              const charData = decompositionData.get(char);
 
-                                return (
-                                  <CharacterTile
-                                    key={char}
-                                    char={char}
-                                    pinyin={charData?.pinyin}
-                                    meaning={charData?.meaning}
-                                    role={
-                                      isSemantic
-                                        ? "semantic"
-                                        : isPhonetic
-                                          ? "phonetic"
-                                          : undefined
-                                    }
-                                    variant="inline"
-                                  />
-                                );
-                              })}
+                              return (
+                                <CharacterTile
+                                  key={char}
+                                  char={char}
+                                  pinyin={charData?.pinyin}
+                                  meaning={charData?.meaning}
+                                  role={
+                                    isSemantic
+                                      ? "semantic"
+                                      : isPhonetic
+                                        ? "phonetic"
+                                        : undefined
+                                  }
+                                  variant="inline"
+                                />
+                              );
+                            })}
                           </div>
                         )}
                       </div>
@@ -122,7 +113,7 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                       {data.etymology?.hint && (
                         <div className=" text-amber-700">
                           <p className="italic text-lg">
-                            {data.etymology.hint}
+                            Hint: {data.etymology.hint}
                           </p>
                         </div>
                       )}
@@ -140,27 +131,25 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
               </div>
             </div>
 
-            {/* Right: Notes + Save */}
-            <div className="space-y-6">
-              <div className="p-6 rounded-xl bg-white border border-gray-200 space-y-3">
+            {/* Right: Notes Section */}
+            <div className="h-full">
+              <div className="h-full p-6 rounded-xl bg-white border border-gray-200 flex flex-col gap-3">
                 <h3 className="text-sm font-semibold text-gray-700">
-                  Personal Notes
+                  Personal note
                 </h3>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Add your learning notes..."
-                  className="w-full h-24 px-3 py-2 text-sm rounded-xl border border-gray-300 bg-white
-                    focus:outline-none focus:border-primary
-                    placeholder:text-muted-foreground resize-none"
+                <DetailNoteEditor
+                  key={data.character}
+                  initialNotes={savedNotes}
+                  onSave={(notesValue) => {
+                    if (!accessToken) {
+                      toast.info(
+                        "Please log in to save notes to your collection",
+                      );
+                      return;
+                    }
+                    save(data, notesValue);
+                  }}
                 />
-                <button
-                  onClick={handleSave}
-                  className="w-full px-6 py-2.5 rounded-xl bg-primary text-primary-foreground
-                    font-medium text-sm hover:bg-primary/90 transition-colors cursor-pointer"
-                >
-                  Save to Collection
-                </button>
               </div>
             </div>
           </div>

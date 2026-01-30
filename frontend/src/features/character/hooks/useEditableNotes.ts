@@ -5,29 +5,22 @@ export function useEditableNotes() {
   const { updateNotes } = useCollectionStore();
 
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editValue, setEditValue] = useState("");
 
-  const startEdit = useCallback((id: string, currentNotes: string) => {
+  const startEdit = useCallback((id: string) => {
     setEditingId(id);
-    setEditValue(currentNotes);
   }, []);
 
   const cancelEdit = useCallback(() => {
     setEditingId(null);
-    setEditValue("");
   }, []);
 
-  const saveEdit = useCallback(async () => {
-    if (!editingId) return;
-    await updateNotes(editingId, editValue);
+  const saveEdit = useCallback(async (id: string, notes: string) => {
+    await updateNotes(id, notes);
     setEditingId(null);
-    setEditValue("");
-  }, [editingId, editValue, updateNotes]);
+  }, [updateNotes]);
 
   return {
     editingId,
-    editValue,
-    setEditValue,
     startEdit,
     cancelEdit,
     saveEdit,

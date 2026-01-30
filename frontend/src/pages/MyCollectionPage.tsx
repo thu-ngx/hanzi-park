@@ -81,12 +81,7 @@ const MyCollectionPage = () => {
                   key={char._id}
                   character={char}
                   onRemove={remove}
-                  onEditNotes={notesEditor.startEdit}
-                  isEditing={notesEditor.editingId === char._id}
-                  editNotes={notesEditor.editValue}
-                  onEditNotesChange={notesEditor.setEditValue}
-                  onSaveNotes={notesEditor.saveEdit}
-                  onCancelEdit={notesEditor.cancelEdit}
+                  onSaveNotes={(notes) => notesEditor.saveEdit(char._id, notes)}
                 />
               ))}
             </div>

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useQueries } from "@tanstack/react-query";
 import { characterService } from "../services/characterService";
 
 interface ExampleCharData {
@@ -6,38 +7,36 @@ interface ExampleCharData {
   meaning: string | null;
 }
 
-const EXAMPLE_CHARS = ["清", "想", "妈", "红", "房", "船"];
+const EXAMPLE_CHARS = ["清", "汜", "妈", "隹", "房", "船"];
 
 export const useExampleCharacters = () => {
-  const [exampleChars, setExampleChars] = useState<
-    Record<string, ExampleCharData>
-  >({});
-  const [isLoading, setIsLoading] = useState(true);
+  const queries = useQueries({
+    queries: EXAMPLE_CHARS.map((char) => ({
+      queryKey: ["dictionary", char],
+      queryFn: () => characterService.getDictionaryEntry(char),
+      staleTime: 10 * 60 * 1000, // 10 minutes
+    })),
+  });
 
-  useEffect(() => {
-    const fetchExampleChars = async () => {
-      const entries: Record<string, ExampleCharData> = {};
+  const isLoading = queries.some((q) => q.isLoading);
 
-      await Promise.all(
-        EXAMPLE_CHARS.map(async (char) => {
-          try {
-            const entry = await characterService.getDictionaryEntry(char);
-            entries[char] = {
-              pinyin: entry.pinyin,
-              meaning: entry.definitions?.[0] || null,
-            };
-          } catch (error) {
-            console.error(`Failed to fetch data for ${char}:`, error);
-          }
-        }),
-      );
+  const exampleChars = useMemo(() => {
+    const entries: Record<string, ExampleCharData> = {};
 
-      setExampleChars(entries);
-      setIsLoading(false);
-    };
+    for (let i = 0; i < EXAMPLE_CHARS.length; i++) {
+      const char = EXAMPLE_CHARS[i];
+      const query = queries[i];
 
-    fetchExampleChars();
-  }, []);
+      if (query.data) {
+        entries[char] = {
+          pinyin: query.data.pinyin,
+          meaning: query.data.definitions?.[0] || null,
+        };
+      }
+    }
+
+    return entries;
+  }, [queries]);
 
   return { exampleChars, exampleCharsList: EXAMPLE_CHARS, isLoading };
 };

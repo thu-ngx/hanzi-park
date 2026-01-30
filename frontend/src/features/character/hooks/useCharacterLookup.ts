@@ -1,67 +1,34 @@
-import { useState, useEffect, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "@/lib/toast";
 import { characterService } from "../services/characterService";
 import type { CharacterAnalysis } from "../types/character";
 
-interface LoadedData {
-  character: string;
-  result: CharacterAnalysis;
-}
-
-interface CharacterLookupResult {
-  data: CharacterAnalysis | null;
+export interface CharacterLookupResult {
+  data: CharacterAnalysis | undefined;
   isLoading: boolean;
+  isError: boolean;
 }
 
 export function useCharacterLookup(
   character: string | undefined,
 ): CharacterLookupResult {
-  const [loadedData, setLoadedData] = useState<LoadedData | null>(null);
-  const [loadingFor, setLoadingFor] = useState<string | null>(null);
+  const query = useQuery({
+    queryKey: ["character", character],
+    queryFn: async () => {
+      const result = await characterService.lookup(character!);
+      return result;
+    },
+    enabled: !!character,
+  });
 
-  useEffect(() => {
-    if (!character) return;
+  // Show toast on error (but only once per error)
+  if (query.isError && !query.isFetching) {
+    toast.error("Failed to load character");
+  }
 
-    let cancelled = false;
-
-    // Start loading asynchronously to avoid lint warning
-    Promise.resolve().then(() => {
-      if (!cancelled) {
-        setLoadingFor(character);
-      }
-    });
-
-    characterService
-      .lookup(character)
-      .then((result) => {
-        if (!cancelled) {
-          setLoadedData({ character, result });
-          setLoadingFor(null);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          toast.error("Failed to load character");
-          setLoadedData(null);
-          setLoadingFor(null);
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [character]);
-
-  // Return null if no character or data is for a different character
-  const data = useMemo(() => {
-    if (!character || !loadedData || loadedData.character !== character) {
-      return null;
-    }
-    return loadedData.result;
-  }, [character, loadedData]);
-
-  // Loading if we're fetching for the current character
-  const isLoading = loadingFor === character;
-
-  return { data, isLoading };
+  return {
+    data: query.data,
+    isLoading: query.isLoading,
+    isError: query.isError,
+  };
 }

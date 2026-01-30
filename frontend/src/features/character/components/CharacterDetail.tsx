@@ -1,157 +1,64 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "@/lib/toast";
-import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import { useCollectionStore } from "@/features/character/store";
+import { useParentCharacters, useDecompositionData } from "@/features/character/hooks";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "./CharacterTile";
-import { characterService } from "@/features/character/services/characterService";
+import type { CharacterAnalysis } from "../types/character";
 
-const CharacterDetail = () => {
-  const { activeCharacter, activeLoading, saveCharacter, savedCharacters } =
-    useCharacterStore();
+interface CharacterDetailProps {
+  data: CharacterAnalysis | null;
+  isLoading: boolean;
+}
+
+const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
+  const { save, findByChar } = useCollectionStore();
   const { accessToken } = useAuthStore();
 
+  // Custom hooks for related data
+  const bucketedParents = useParentCharacters(data?.character);
+  const decompositionData = useDecompositionData(data?.decomposition);
+
+  // Get saved notes for current character
+  const savedNotes = useMemo(() => {
+    if (!data) return "";
+    const saved = findByChar(data.character);
+    return saved?.notes || "";
+  }, [data, findByChar]);
+
+  // Local notes state
   const [notes, setNotes] = useState("");
-  const [parentCharacters, setParentCharacters] = useState<
-    Array<{
-      char: string;
-      pinyin: string[];
-      meaning: string | null;
-      frequencyRank?: number | null;
-    }>
-  >([]);
-  const [decompositionData, setDecompositionData] = useState<
-    Map<string, { pinyin: string[]; meaning: string | null }>
-  >(new Map());
 
-  // Load saved notes when activeCharacter changes
   useEffect(() => {
-    if (activeCharacter) {
-      const saved = savedCharacters.find(
-        (c) => c.character === activeCharacter.character,
-      );
-      setNotes(saved?.notes || "");
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    } else {
-      setNotes("");
-    }
-  }, [activeCharacter, savedCharacters]);
+    setNotes(savedNotes);
+  }, [data?.character, savedNotes]); // Only run when character or savedNotes changes
 
-  // Fetch parent characters and decomposition data when activeCharacter changes
-  useEffect(() => {
-    if (!activeCharacter) {
-      setParentCharacters([]);
-      setDecompositionData(new Map());
-      return;
-    }
-
-    // Fetch parent characters
-    characterService
-      .getDictionaryEntry(activeCharacter.character)
-      .then((entry) => {
-        setParentCharacters(entry.parents || []);
-      })
-      .catch(() => {
-        setParentCharacters([]);
-      });
-
-    // Fetch decomposition character data in parallel
-    const decomposition = activeCharacter.decomposition;
-    if (!decomposition) {
-      setDecompositionData(new Map());
-      return;
-    }
-
-    const hanChars = [...decomposition].filter((char) =>
-      /\p{Script=Han}/u.test(char),
-    );
-
-    // Fetch all characters in parallel for low latency
-    Promise.all(
-      hanChars.map((char) =>
-        characterService
-          .getDictionaryEntry(char)
-          .then((entry) => ({
-            char,
-            pinyin: entry.pinyin,
-            meaning: entry.definitions?.[0] || null,
-          }))
-          .catch(() => ({ char, pinyin: [] as string[], meaning: null })),
-      ),
-    ).then((results) => {
-      const map = new Map<
-        string,
-        { pinyin: string[]; meaning: string | null }
-      >();
-      for (const { char, pinyin, meaning } of results) {
-        map.set(char, { pinyin, meaning });
-      }
-      setDecompositionData(map);
-    });
-  }, [activeCharacter]);
-
-  // Bucket parent characters by frequency (memoized for performance)
-  const bucketedParents = useMemo(() => {
-    const buckets = {
-      top1000: [] as Array<{
-        char: string;
-        pinyin: string[];
-        meaning: string | null;
-      }>,
-      mid: [] as Array<{
-        char: string;
-        pinyin: string[];
-        meaning: string | null;
-      }>,
-      rest: [] as Array<{
-        char: string;
-        pinyin: string[];
-        meaning: string | null;
-      }>,
-    };
-
-    for (const parent of parentCharacters) {
-      const rank = parent.frequencyRank;
-      if (rank && rank <= 1000) {
-        buckets.top1000.push(parent);
-      } else if (rank && rank <= 2000) {
-        buckets.mid.push(parent);
-      } else {
-        buckets.rest.push(parent);
-      }
-    }
-
-    return buckets;
-  }, [parentCharacters]);
-
-  if (!activeCharacter && !activeLoading) return null;
-
-  const data = activeCharacter;
+  if (!data && !isLoading) return null;
 
   const handleSave = () => {
     if (!data) return;
 
-    // Check if user is authenticated
     if (!accessToken) {
       toast.info("Please log in to save notes to your collection");
       return;
     }
 
-    saveCharacter(data, notes);
+    save(data, notes);
   };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Loading state */}
-      {activeLoading && (
+      {isLoading && (
         <div className="flex flex-col items-center gap-4 py-16">
           <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin" />
           <p className="text-gray-500">Loading character...</p>
         </div>
       )}
 
-      {data && !activeLoading && (
+      {data && !isLoading && (
         <>
           {/* Main content grid */}
           <div className="grid lg:grid-cols-3 gap-8">
@@ -235,7 +142,6 @@ const CharacterDetail = () => {
 
             {/* Right: Notes + Save */}
             <div className="space-y-6">
-              {/* Notes + Save */}
               <div className="p-6 rounded-xl bg-white border border-gray-200 space-y-3">
                 <h3 className="text-sm font-semibold text-gray-700">
                   Personal Notes

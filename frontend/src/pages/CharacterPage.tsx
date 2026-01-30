@@ -1,31 +1,24 @@
-import { useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
-import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import { useParams, Navigate } from "react-router";
+import { useCharacterLookup } from "@/features/character/hooks";
 import Navbar from "@/components/layout/Navbar";
 import CharacterDetail from "@/features/character/components/CharacterDetail";
 
 const CharacterPage = () => {
-    const { char } = useParams<{ char: string }>();
-    const navigate = useNavigate();
-    const { pushCharacter } = useCharacterStore();
+  const { char } = useParams<{ char: string }>();
+  const { data, isLoading } = useCharacterLookup(char);
 
-    // Fetch character data when URL param changes
-    useEffect(() => {
-        if (char) {
-            pushCharacter(char);
-        } else {
-            navigate("/");
-        }
-    }, [char, pushCharacter, navigate]);
+  if (!char) {
+    return <Navigate to="/" replace />;
+  }
 
-    return (
-        <div className="min-h-screen bg-background">
-            <Navbar />
-            <main className="max-w-6xl mx-auto px-4 py-8">
-                <CharacterDetail />
-            </main>
-        </div>
-    );
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        <CharacterDetail data={data} isLoading={isLoading} />
+      </main>
+    </div>
+  );
 };
 
 export default CharacterPage;

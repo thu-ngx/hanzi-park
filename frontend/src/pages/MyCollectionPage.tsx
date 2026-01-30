@@ -1,49 +1,33 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Navbar from "@/components/layout/Navbar";
-import { useCharacterStore } from "@/features/character/store/useCharacterStore";
+import { useCollectionStore } from "@/features/character/store";
+import { useEditableNotes } from "@/features/character/hooks";
 import CharacterCard from "@/features/character/components/CharacterCard";
 import SkeletonCard from "@/features/character/components/SkeletonCard";
 import { Search, Bookmark } from "lucide-react";
 
 const MyCollectionPage = () => {
-  const {
-    savedCharacters,
-    collectionLoading,
-    loadSaved,
-    removeCharacter,
-    updateNotes,
-  } = useCharacterStore();
+  const { characters, isLoading, load, remove } = useCollectionStore();
+  const notesEditor = useEditableNotes();
 
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editNotes, setEditNotes] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    loadSaved();
-  }, [loadSaved]);
+    load();
+  }, [load]);
 
-  const handleStartEdit = useCallback((id: string, currentNotes: string) => {
-    setEditingId(id);
-    setEditNotes(currentNotes);
-  }, []);
+  const filtered = useMemo(() => {
+    if (!searchQuery) return characters;
 
-  const handleSaveNotes = useCallback(
-    (id: string) => {
-      updateNotes(id, editNotes);
-      setEditingId(null);
-    },
-    [editNotes, updateNotes],
-  );
-
-  const filtered = searchQuery
-    ? savedCharacters.filter(
-        (c) =>
-          c.character.includes(searchQuery) ||
-          c.pinyin.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          c.meaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          c.notes?.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    : savedCharacters;
+    const q = searchQuery.toLowerCase();
+    return characters.filter(
+      (c) =>
+        c.character.includes(searchQuery) ||
+        c.pinyin.toLowerCase().includes(q) ||
+        c.meaning.toLowerCase().includes(q) ||
+        c.notes?.toLowerCase().includes(q),
+    );
+  }, [characters, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -60,11 +44,11 @@ const MyCollectionPage = () => {
                 My Collection
               </h3>
               <p className="text-sm text-muted-foreground">
-                {savedCharacters.length} saved character
-                {savedCharacters.length !== 1 ? "s" : ""}
+                {characters.length} saved character
+                {characters.length !== 1 ? "s" : ""}
               </p>
             </div>
-            {savedCharacters.length > 0 && (
+            {characters.length > 0 && (
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <input
@@ -81,7 +65,7 @@ const MyCollectionPage = () => {
           </div>
 
           {/* Loading */}
-          {collectionLoading && (
+          {isLoading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
                 <SkeletonCard key={i} />
@@ -90,26 +74,26 @@ const MyCollectionPage = () => {
           )}
 
           {/* Collection Grid */}
-          {!collectionLoading && filtered.length > 0 && (
+          {!isLoading && filtered.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((char) => (
                 <CharacterCard
                   key={char._id}
                   character={char}
-                  onRemove={removeCharacter}
-                  onEditNotes={handleStartEdit}
-                  isEditing={editingId === char._id}
-                  editNotes={editNotes}
-                  onEditNotesChange={setEditNotes}
-                  onSaveNotes={() => handleSaveNotes(char._id)}
-                  onCancelEdit={() => setEditingId(null)}
+                  onRemove={remove}
+                  onEditNotes={notesEditor.startEdit}
+                  isEditing={notesEditor.editingId === char._id}
+                  editNotes={notesEditor.editValue}
+                  onEditNotesChange={notesEditor.setEditValue}
+                  onSaveNotes={notesEditor.saveEdit}
+                  onCancelEdit={notesEditor.cancelEdit}
                 />
               ))}
             </div>
           )}
 
           {/* Empty state */}
-          {!collectionLoading && savedCharacters.length === 0 && (
+          {!isLoading && characters.length === 0 && (
             <div className="text-center py-16">
               <div className="mb-4 opacity-30">
                 <Bookmark className="inline w-16 h-16" />
@@ -124,15 +108,13 @@ const MyCollectionPage = () => {
           )}
 
           {/* Filtered empty */}
-          {!collectionLoading &&
-            savedCharacters.length > 0 &&
-            filtered.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">
-                  No characters match your search
-                </p>
-              </div>
-            )}
+          {!isLoading && characters.length > 0 && filtered.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">
+                No characters match your search
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>

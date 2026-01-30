@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
-import { useCharacterStore } from "@/features/character/store/useCharacterStore";
 import { useNavigate, useLocation } from "react-router";
 import { LogOut, ChevronDown, Bookmark } from "lucide-react";
 import GlobalSearch from "@/features/character/components/GlobalSearch";
 
 const Navbar = () => {
   const { user, accessToken, logOut } = useAuthStore();
-  const { resetExplorer } = useCharacterStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -31,23 +29,9 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogoClick = () => {
-    resetExplorer();
-    navigate("/");
-  };
-
-  const handleCollectionClick = () => {
-    resetExplorer();
-    navigate("/collection");
-  };
-
   const handleLogout = async () => {
     await logOut();
     navigate("/");
-  };
-
-  const handleLogin = () => {
-    navigate("/login");
   };
 
   return (
@@ -58,7 +42,7 @@ const Navbar = () => {
           href="/"
           onClick={(e) => {
             e.preventDefault();
-            handleLogoClick();
+            navigate("/");
           }}
         >
           <div className="flex items-center gap-2">
@@ -87,7 +71,7 @@ const Navbar = () => {
             <>
               {/* My Collection - desktop only */}
               <button
-                onClick={handleCollectionClick}
+                onClick={() => navigate("/collection")}
                 className={`hidden sm:block px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors ${
                   isCollectionActive
                     ? "bg-primary text-primary-foreground"
@@ -119,7 +103,7 @@ const Navbar = () => {
                     {/* My Collection - mobile only in dropdown */}
                     <button
                       onClick={() => {
-                        handleCollectionClick();
+                        navigate("/collection");
                         setDropdownOpen(false);
                       }}
                       className={`sm:hidden w-full flex items-center gap-2 px-4 py-2 text-sm cursor-pointer transition-colors ${
@@ -149,7 +133,7 @@ const Navbar = () => {
           ) : (
             /* Login button - only when not logged in */
             <button
-              onClick={handleLogin}
+              onClick={() => navigate("/login")}
               className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Login

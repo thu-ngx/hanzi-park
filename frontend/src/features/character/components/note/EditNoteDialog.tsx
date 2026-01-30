@@ -35,7 +35,7 @@ const EditNoteDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-425px">
+      <DialogContent className="bg-background border-gray-200">
         <DialogHeader>
           <DialogTitle>Edit note for {character}</DialogTitle>
         </DialogHeader>
@@ -44,7 +44,7 @@ const EditNoteDialog = ({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Add your learning notes..."
-            className="resize-none min-h-120px"
+            className="resize-none min-h-120px bg-white"
           />
         </div>
         <DialogFooter>

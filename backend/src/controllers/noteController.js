@@ -12,7 +12,7 @@ export const getSaved = async (req, res) => {
   }
 };
 
-// POST /api/notes - save a character to user's collection
+// POST /api/notes - save a character note
 export const save = async (req, res) => {
   try {
     const userId = req.user._id;

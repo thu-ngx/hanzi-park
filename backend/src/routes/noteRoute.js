@@ -1,14 +1,14 @@
 import express from "express";
 import {
-    getSaved,
-    save,
-    updateNotes,
-    remove,
+  getSaved,
+  save,
+  updateNotes,
+  remove,
 } from "../controllers/noteController.js";
 
 const router = express.Router();
 
-// user collection endpoints
+// user note endpoints
 router.get("/", getSaved);
 router.post("/", save);
 router.put("/:id/notes", updateNotes);

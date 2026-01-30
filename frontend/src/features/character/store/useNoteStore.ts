@@ -1,9 +1,12 @@
 import { create } from "zustand";
 import { toast } from "@/lib/toast";
 import { characterService } from "@/features/character/services/characterService";
-import type { CharacterAnalysis, SavedCharacter } from "@/features/character/types/character";
+import type {
+  CharacterAnalysis,
+  SavedCharacter,
+} from "@/features/character/types/character";
 
-interface CollectionState {
+interface NoteState {
   characters: SavedCharacter[];
   isLoading: boolean;
 
@@ -14,7 +17,7 @@ interface CollectionState {
   findByChar: (char: string) => SavedCharacter | undefined;
 }
 
-export const useCollectionStore = create<CollectionState>((set, get) => ({
+export const useNoteStore = create<NoteState>((set, get) => ({
   characters: [],
   isLoading: false,
 
@@ -65,10 +68,12 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
       set((s) => ({
         characters: s.characters.map((c) => (c._id === tempId ? saved : c)),
       }));
-      toast.success(`"${data.character}" saved to collection`);
+      toast.success(`"${data.character}" saved to notes`);
     } catch {
       // Rollback optimistic update
-      set((s) => ({ characters: s.characters.filter((c) => c._id !== tempId) }));
+      set((s) => ({
+        characters: s.characters.filter((c) => c._id !== tempId),
+      }));
       toast.error("Character may already be saved");
     }
   },
@@ -81,7 +86,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
     // Optimistic update
     set((s) => ({
       characters: s.characters.map((c) =>
-        c._id === id ? { ...c, notes, updatedAt: new Date().toISOString() } : c
+        c._id === id ? { ...c, notes, updatedAt: new Date().toISOString() } : c,
       ),
     }));
 
@@ -113,7 +118,7 @@ export const useCollectionStore = create<CollectionState>((set, get) => ({
 
     try {
       await characterService.remove(id);
-      toast.success("Character removed from collection");
+      toast.success("Character removed from notes");
     } catch {
       // Rollback
       set({ characters: previous });

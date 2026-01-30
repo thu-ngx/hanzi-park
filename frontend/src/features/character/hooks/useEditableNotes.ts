@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
-import { useCollectionStore } from "../store/useCollectionStore";
+import { useNoteStore } from "../store/useNoteStore";
 
 export function useEditableNotes() {
-  const { updateNotes } = useCollectionStore();
+  const { updateNotes } = useNoteStore();
 
   const [editingId, setEditingId] = useState<string | null>(null);
 
@@ -14,10 +14,13 @@ export function useEditableNotes() {
     setEditingId(null);
   }, []);
 
-  const saveEdit = useCallback(async (id: string, notes: string) => {
-    await updateNotes(id, notes);
-    setEditingId(null);
-  }, [updateNotes]);
+  const saveEdit = useCallback(
+    async (id: string, notes: string) => {
+      await updateNotes(id, notes);
+      setEditingId(null);
+    },
+    [updateNotes],
+  );
 
   return {
     editingId,

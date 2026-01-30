@@ -4,10 +4,10 @@ import { useEditableNotes } from "@/features/character/hooks";
 import CharacterCard from "@/features/character/components/card/CharacterCard";
 import SkeletonCard from "@/features/character/components/card/SkeletonCard";
 import { Search, Bookmark } from "lucide-react";
-import { useCollectionStore } from "@/features/character/store/useCollectionStore";
+import { useNoteStore } from "@/features/character/store/useNoteStore";
 
 const MyCollectionPage = () => {
-  const { characters, isLoading, load, remove } = useCollectionStore();
+  const { characters, isLoading, load, remove } = useNoteStore();
   const notesEditor = useEditableNotes();
 
   const [searchQuery, setSearchQuery] = useState("");

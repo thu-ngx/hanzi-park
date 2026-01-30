@@ -10,7 +10,7 @@ import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
 import type { CharacterAnalysis } from "../../types/character";
-import { useCollectionStore } from "../../store/useCollectionStore";
+import { useNoteStore } from "../../store/useNoteStore";
 
 interface CharacterDetailProps {
   data: CharacterAnalysis | null | undefined;
@@ -18,19 +18,20 @@ interface CharacterDetailProps {
 }
 
 const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
-  const { save, findByChar } = useCollectionStore();
+  const { save, updateNotes, findByChar } = useNoteStore();
   const { accessToken } = useAuthStore();
 
   // Custom hooks for related data
   const bucketedParents = useParentCharacters(data?.character);
   const decompositionData = useDecompositionData(data?.decomposition);
 
-  // Get saved notes for current character
-  const savedNotes = useMemo(() => {
-    if (!data) return "";
-    const saved = findByChar(data.character);
-    return saved?.notes || "";
+  // Get saved character and notes
+  const savedCharacter = useMemo(() => {
+    if (!data) return null;
+    return findByChar(data.character);
   }, [data, findByChar]);
+
+  const savedNotes = savedCharacter?.notes || "";
 
   if (!data && !isLoading) return null;
 
@@ -142,12 +143,16 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                   initialNotes={savedNotes}
                   onSave={(notesValue) => {
                     if (!accessToken) {
-                      toast.info(
-                        "Please log in to save notes to your collection",
-                      );
+                      toast.info("Please log in to save notes");
                       return;
                     }
-                    save(data, notesValue);
+
+                    // If character is already saved, update notes; otherwise save new
+                    if (savedCharacter) {
+                      updateNotes(savedCharacter._id, notesValue);
+                    } else {
+                      save(data, notesValue);
+                    }
                   }}
                 />
               </div>

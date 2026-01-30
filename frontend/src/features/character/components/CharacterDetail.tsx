@@ -9,7 +9,7 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "./StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "./CharacterTile";
-import DetailNoteEditor from "./note/DetailNoteEditor";
+import NoteCapture from "./note/NoteCapture";
 import type { CharacterAnalysis } from "../types/character";
 
 interface CharacterDetailProps {
@@ -137,7 +137,7 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                 <h3 className="text-sm font-semibold text-gray-700">
                   Personal note
                 </h3>
-                <DetailNoteEditor
+                <NoteCapture
                   key={data.character}
                   initialNotes={savedNotes}
                   onSave={(notesValue) => {

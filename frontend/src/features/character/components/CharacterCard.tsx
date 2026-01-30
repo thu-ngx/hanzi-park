@@ -2,9 +2,8 @@ import { Link } from "react-router";
 import { Trash2, Pencil } from "lucide-react";
 import type { SavedCharacter } from "@/features/character/types/character";
 import CharacterTags from "./CharacterTags";
-import NoteDisplay from "./note/NoteDisplay";
-import EditNoteDialog from "./note/EditNoteDialog";
 import { Button } from "@/components/ui/button";
+import EditNoteDialog from "./note/EditNoteDialog";
 
 interface CharacterCardProps {
   character: SavedCharacter;
@@ -45,7 +44,9 @@ const CharacterCard = ({
 
       {/* Notes section with actions */}
       <div className="px-4 pb-4 pt-3 border-t border-gray-200 flex flex-col gap-2">
-        <NoteDisplay note={character.notes || ""} />
+        <p className="text-xs text-muted-foreground flex-1 wrap-break-word whitespace-pre-wrap">
+          {character.notes || ""}
+        </p>
 
         <div className="flex justify-end gap-1">
           <EditNoteDialog

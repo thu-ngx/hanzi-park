@@ -6,28 +6,28 @@ import { Search, Bookmark } from "lucide-react";
 import {
   useNotes,
   useDeleteNote,
-  useUpdateNote,
+  useSaveNote,
 } from "@/features/character/hooks/useNote";
 
 const MyCollectionPage = () => {
-  const { data: characters = [], isLoading } = useNotes();
+  const { data: notes = [], isLoading } = useNotes();
   const deleteNote = useDeleteNote();
-  const updateNote = useUpdateNote();
+  const saveNote = useSaveNote();
 
   const [searchQuery, setSearchQuery] = useState("");
 
   const filtered = useMemo(() => {
-    if (!searchQuery) return characters;
+    if (!searchQuery) return notes;
 
     const q = searchQuery.toLowerCase();
-    return characters.filter(
-      (c) =>
-        c.character.includes(searchQuery) ||
-        c.pinyin.toLowerCase().includes(q) ||
-        c.meaning.toLowerCase().includes(q) ||
-        c.notes?.toLowerCase().includes(q),
+    return notes.filter(
+      (n) =>
+        n.character.includes(searchQuery) ||
+        n.pinyin.toLowerCase().includes(q) ||
+        n.meaning.toLowerCase().includes(q) ||
+        n.noteContent?.toLowerCase().includes(q),
     );
-  }, [characters, searchQuery]);
+  }, [notes, searchQuery]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -44,11 +44,11 @@ const MyCollectionPage = () => {
                 My Collection
               </h3>
               <p className="text-sm text-muted-foreground">
-                {characters.length} saved character
-                {characters.length !== 1 ? "s" : ""}
+                {notes.length} saved character
+                {notes.length !== 1 ? "s" : ""}
               </p>
             </div>
-            {characters.length > 0 && (
+            {notes.length > 0 && (
               <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <input
@@ -76,13 +76,13 @@ const MyCollectionPage = () => {
           {/* Collection Grid */}
           {!isLoading && filtered.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filtered.map((char) => (
+              {filtered.map((note) => (
                 <CharacterCard
-                  key={char._id}
-                  character={char}
+                  key={note._id}
+                  note={note}
                   onRemove={(id) => deleteNote.mutate(id)}
-                  onSaveNotes={(notes) =>
-                    updateNote.mutate({ id: char._id, notes })
+                  onSaveNoteContent={(noteContent) =>
+                    saveNote.mutate({ data: note, noteContent })
                   }
                 />
               ))}
@@ -90,7 +90,7 @@ const MyCollectionPage = () => {
           )}
 
           {/* Empty state */}
-          {!isLoading && characters.length === 0 && (
+          {!isLoading && notes.length === 0 && (
             <div className="text-center py-16">
               <div className="mb-4 opacity-30">
                 <Bookmark className="inline w-16 h-16" />
@@ -105,7 +105,7 @@ const MyCollectionPage = () => {
           )}
 
           {/* Filtered empty */}
-          {!isLoading && characters.length > 0 && filtered.length === 0 && (
+          {!isLoading && notes.length > 0 && filtered.length === 0 && (
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 No characters match your search

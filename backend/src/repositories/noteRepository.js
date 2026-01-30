@@ -28,6 +28,14 @@ export async function updateNotes(id, userId, notes) {
     );
 }
 
+export async function upsert(userId, data) {
+    return Note.findOneAndUpdate(
+        { userId, character: data.character },
+        { $set: data, $setOnInsert: { userId } },
+        { upsert: true, new: true }
+    );
+}
+
 export async function deleteByIdAndUser(id, userId) {
     return Note.findOneAndDelete({ _id: id, userId });
 }

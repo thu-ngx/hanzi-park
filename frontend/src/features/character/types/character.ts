@@ -42,7 +42,7 @@ export interface CharacterAnalysis {
   decomposition?: string;
 }
 
-export interface SavedCharacter {
+export interface Note {
   _id: string;
   userId: string;
   character: string;
@@ -51,8 +51,7 @@ export interface SavedCharacter {
   semanticRadical: SemanticRadical | null;
   phoneticComponent: PhoneticComponent | null;
   frequencyRank: number | null;
-  strokeCount: number;
-  notes: string;
+  noteContent: string;
   createdAt: string;
   updatedAt: string;
 }

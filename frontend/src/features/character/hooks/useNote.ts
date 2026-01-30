@@ -1,7 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { characterService } from "../services/characterService";
 import { toast } from "@/lib/toast";
-import type { SavedCharacter, CharacterAnalysis } from "../types/character";
+import type { Note } from "../types/character";
+
+type NoteData = Pick<
+  Note,
+  | "character"
+  | "pinyin"
+  | "meaning"
+  | "semanticRadical"
+  | "phoneticComponent"
+  | "frequencyRank"
+>;
 
 export const useNotes = () => {
   return useQuery({
@@ -11,16 +21,16 @@ export const useNotes = () => {
   });
 };
 
-export const useAddNote = () => {
+export const useSaveNote = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({
       data,
-      notes,
+      noteContent,
     }: {
-      data: CharacterAnalysis;
-      notes: string;
+      data: NoteData;
+      noteContent: string;
     }) => {
       return characterService.save({
         character: data.character,
@@ -29,86 +39,50 @@ export const useAddNote = () => {
         semanticRadical: data.semanticRadical,
         phoneticComponent: data.phoneticComponent,
         frequencyRank: data.frequencyRank,
-        strokeCount: data.strokeCount,
-        notes: notes,
+        noteContent,
       });
     },
-    // Optimistic Updates
-    onMutate: async ({ data, notes }) => {
-      // Cancel outgoing refetches
+    onMutate: async ({ data, noteContent }) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
 
-      // Snapshot the previous value
-      const previousNotes = queryClient.getQueryData<SavedCharacter[]>([
+      const previousNotes = queryClient.getQueryData<Note[]>([
         "notes",
       ]);
 
-      // Create optimistic character
-      const optimisticChar: SavedCharacter = {
-        _id: `temp-${Date.now()}`,
-        userId: "",
-        character: data.character,
-        pinyin: data.pinyin,
-        meaning: data.meaning,
-        semanticRadical: data.semanticRadical,
-        phoneticComponent: data.phoneticComponent,
-        frequencyRank: data.frequencyRank,
-        strokeCount: data.strokeCount,
-        notes: notes,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
+      // Optimistically update or add the character
+      queryClient.setQueryData<Note[]>(["notes"], (old) => {
+        const existing = old?.find((n) => n.character === data.character);
+        if (existing) {
+          return old?.map((n) =>
+            n.character === data.character
+              ? { ...n, noteContent, updatedAt: new Date().toISOString() }
+              : n,
+          );
+        }
+        return [
+          {
+            _id: `temp-${Date.now()}`,
+            userId: "",
+            character: data.character,
+            pinyin: data.pinyin,
+            meaning: data.meaning,
+            semanticRadical: data.semanticRadical,
+            phoneticComponent: data.phoneticComponent,
+            frequencyRank: data.frequencyRank,
+            noteContent,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+          ...(old || []),
+        ];
+      });
 
-      // Optimistically update the cache
-      queryClient.setQueryData<SavedCharacter[]>(["notes"], (old) => [
-        optimisticChar,
-        ...(old || []),
-      ]);
-
-      toast.success(`"${data.character}" saved to notes`);
-
-      // Return context for rollback
+      toast.success("Note saved");
       return { previousNotes };
     },
     onError: (_err, _newNote, context) => {
-      // Roll back to the snapshot
       queryClient.setQueryData(["notes"], context?.previousNotes);
-      toast.error("Character may already be saved");
-    },
-    onSettled: () => {
-      // Always refetch to ensure we have the real ID from DB
-      queryClient.invalidateQueries({ queryKey: ["notes"] });
-    },
-  });
-};
-
-export const useUpdateNote = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, notes }: { id: string; notes: string }) =>
-      characterService.updateNotes(id, notes),
-    onMutate: async ({ id, notes }) => {
-      await queryClient.cancelQueries({ queryKey: ["notes"] });
-      const previousNotes = queryClient.getQueryData<SavedCharacter[]>([
-        "notes",
-      ]);
-
-      // Optimistically update the specific note
-      queryClient.setQueryData<SavedCharacter[]>(["notes"], (old) =>
-        old?.map((char) =>
-          char._id === id
-            ? { ...char, notes, updatedAt: new Date().toISOString() }
-            : char,
-        ),
-      );
-
-      toast.success("Notes updated");
-      return { previousNotes };
-    },
-    onError: (_err, _vars, context) => {
-      queryClient.setQueryData(["notes"], context?.previousNotes);
-      toast.error("Failed to update notes");
+      toast.error("Failed to save note");
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
@@ -123,12 +97,12 @@ export const useDeleteNote = () => {
     mutationFn: characterService.remove,
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
-      const previousNotes = queryClient.getQueryData<SavedCharacter[]>([
+      const previousNotes = queryClient.getQueryData<Note[]>([
         "notes",
       ]);
 
       // Optimistically filter out the deleted item
-      queryClient.setQueryData<SavedCharacter[]>(["notes"], (old) =>
+      queryClient.setQueryData<Note[]>(["notes"], (old) =>
         old?.filter((char) => char._id !== id),
       );
 

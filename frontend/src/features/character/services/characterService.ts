@@ -1,7 +1,7 @@
 import api from "@/lib/axios";
 import type {
   CharacterAnalysis,
-  SavedCharacter,
+  Note,
   DictionaryEntry,
   SearchResult,
 } from "@/features/character/types/character";
@@ -26,18 +26,13 @@ export const characterService = {
   },
 
   // User notes endpoints (protected - /api/notes)
-  getSaved: async (): Promise<SavedCharacter[]> => {
+  getSaved: async (): Promise<Note[]> => {
     const res = await api.get("/notes");
     return res.data;
   },
 
-  save: async (data: Partial<SavedCharacter>): Promise<SavedCharacter> => {
+  save: async (data: Partial<Note>): Promise<Note> => {
     const res = await api.post("/notes", data);
-    return res.data;
-  },
-
-  updateNotes: async (id: string, notes: string): Promise<SavedCharacter> => {
-    const res = await api.put(`/notes/${id}/notes`, { notes });
     return res.data;
   },
 

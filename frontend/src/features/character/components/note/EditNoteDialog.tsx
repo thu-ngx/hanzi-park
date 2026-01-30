@@ -12,23 +12,23 @@ import {
 } from "@/components/ui/dialog";
 
 interface EditNoteDialogProps {
-  initialNotes: string;
+  initialNoteContent: string;
   character: string;
-  onSave: (notes: string) => void;
+  onSave: (noteContent: string) => void;
   trigger: React.ReactNode;
 }
 
 const EditNoteDialog = ({
-  initialNotes,
+  initialNoteContent,
   character,
   onSave,
   trigger,
 }: EditNoteDialogProps) => {
-  const [notes, setNotes] = useState(initialNotes);
+  const [noteContent, setNoteContent] = useState(initialNoteContent);
   const [open, setOpen] = useState(false);
 
   const handleSave = () => {
-    onSave(notes);
+    onSave(noteContent);
     setOpen(false);
   };
 
@@ -41,8 +41,8 @@ const EditNoteDialog = ({
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <Textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            value={noteContent}
+            onChange={(e) => setNoteContent(e.target.value)}
             placeholder="Add your learning notes..."
             className="resize-none min-h-120px bg-white"
           />

@@ -65,7 +65,7 @@ const CharacterGrid = ({ title, data }: CharacterGridProps) => {
 
       <GridSection label="Core (Top 1000)" chars={data.top1000} />
       <GridSection label="Common (1001-2000)" chars={data.mid} />
-      <GridSection label="Less Common" chars={data.rest} />
+      <GridSection label="Less common" chars={data.rest} />
     </div>
   );
 };

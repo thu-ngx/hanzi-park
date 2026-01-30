@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { toast } from "@/lib/toast";
 import {
   useParentCharacters,
@@ -10,7 +9,7 @@ import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
 import type { CharacterAnalysis } from "../../types/character";
-import { useNotes, useAddNote, useUpdateNote } from "../../hooks/useNote";
+import { useNotes, useSaveNote } from "../../hooks/useNote";
 
 interface CharacterDetailProps {
   data: CharacterAnalysis | null | undefined;
@@ -21,19 +20,13 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
   const { accessToken } = useAuthStore();
 
   const { data: allNotes } = useNotes();
-  const addNote = useAddNote();
-  const updateNote = useUpdateNote();
+  const saveNote = useSaveNote();
 
   const bucketedParents = useParentCharacters(data?.character);
   const decompositionData = useDecompositionData(data?.decomposition);
 
-  // Find if the current character is already saved
-  const savedCharacter = useMemo(() => {
-    if (!data || !allNotes) return null;
-    return allNotes.find((n) => n.character === data.character);
-  }, [data, allNotes]);
-
-  const savedNotes = savedCharacter?.notes || "";
+  const savedNoteContent =
+    allNotes?.find((n) => n.character === data?.character)?.noteContent || "";
 
   if (!data && !isLoading) return null;
 
@@ -142,22 +135,13 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                 </h3>
                 <NoteCapture
                   key={data.character}
-                  initialNotes={savedNotes}
-                  onSave={(notesValue) => {
+                  initialNoteContent={savedNoteContent}
+                  onSave={(noteContent) => {
                     if (!accessToken) {
                       toast.info("Please log in to save notes");
                       return;
                     }
-
-                    // If character is already saved, update notes; otherwise save new
-                    if (savedCharacter) {
-                      updateNote.mutate({
-                        id: savedCharacter._id,
-                        notes: notesValue,
-                      });
-                    } else {
-                      addNote.mutate({ data, notes: notesValue });
-                    }
+                    saveNote.mutate({ data, noteContent });
                   }}
                 />
               </div>

@@ -36,8 +36,8 @@ const CharacterTile = ({
                     hover:bg-primary hover:border-primary hover:text-white
                     ${
                       variant === "inline"
-                        ? "bg-muted border-gray-200 text-black"
-                        : "bg-white border-gray-200 text-black"
+                        ? "bg-muted border-gray-200 text-black" // tile in character details
+                        : "bg-white border-gray-200 text-black" // tile in character grid
                     }`}
       >
         {char}

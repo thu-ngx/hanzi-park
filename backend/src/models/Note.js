@@ -33,10 +33,7 @@ const noteSchema = new mongoose.Schema(
         frequencyRank: {
             type: Number,
         },
-        strokeCount: {
-            type: Number,
-        },
-        notes: {
+        noteContent: {
             type: String,
             maxlength: 2000,
         },

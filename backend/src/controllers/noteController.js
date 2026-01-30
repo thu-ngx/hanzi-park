@@ -12,7 +12,7 @@ export const getSaved = async (req, res) => {
   }
 };
 
-// POST /api/notes - save a character note
+// POST /api/notes - save or update a character note (upsert)
 export const save = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -23,52 +23,26 @@ export const save = async (req, res) => {
       semanticRadical,
       phoneticComponent,
       frequencyRank,
-      strokeCount,
-      notes,
+      noteContent,
     } = req.body;
 
     if (!character) {
       return res.status(400).json({ message: "Character is required" });
     }
 
-    const result = await noteService.add(userId, {
+    const saved = await noteService.save(userId, {
       character,
       pinyin,
       meaning,
       semanticRadical,
       phoneticComponent,
       frequencyRank,
-      strokeCount,
-      notes,
+      noteContent,
     });
 
-    if (result.error === "already_exists") {
-      return res.status(409).json({ message: "Character already saved" });
-    }
-
-    return res.status(201).json(result.data);
+    return res.status(200).json(saved);
   } catch (error) {
     console.error("Error in save:", error);
-    return res.status(500).json({ message: "System error" });
-  }
-};
-
-// PUT /api/notes/:id/notes - update notes for a saved character
-export const updateNotes = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const { id } = req.params;
-    const { notes } = req.body;
-
-    const note = await noteService.updateNotes(userId, id, notes);
-
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    return res.status(200).json(note);
-  } catch (error) {
-    console.error("Error in updateNotes:", error);
     return res.status(500).json({ message: "System error" });
   }
 };

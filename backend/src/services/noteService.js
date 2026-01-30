@@ -8,7 +8,7 @@ export async function getAll(userId) {
     return noteRepo.findByUserId(userId);
 }
 
-export async function add(userId, characterData) {
+export async function save(userId, characterData) {
     const {
         character,
         pinyin,
@@ -16,33 +16,18 @@ export async function add(userId, characterData) {
         semanticRadical,
         phoneticComponent,
         frequencyRank,
-        strokeCount,
-        notes,
+        noteContent,
     } = characterData;
 
-    // Check if already saved
-    const existing = await noteRepo.findByUserAndCharacter(userId, character);
-    if (existing) {
-        return { error: "already_exists", data: existing };
-    }
-
-    const saved = await noteRepo.create({
-        userId,
+    return noteRepo.upsert(userId, {
         character,
         pinyin,
         meaning,
         semanticRadical,
         phoneticComponent,
         frequencyRank,
-        strokeCount,
-        notes: notes || "",
+        noteContent: noteContent || "",
     });
-
-    return { error: null, data: saved };
-}
-
-export async function updateNotes(userId, characterId, notes) {
-    return noteRepo.updateNotes(characterId, userId, notes);
 }
 
 export async function remove(userId, characterId) {

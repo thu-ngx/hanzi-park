@@ -3,13 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 interface NoteCaptureProps {
-  initialNotes: string;
-  onSave: (notes: string) => void;
+  initialNoteContent: string;
+  onSave: (noteContent: string) => void;
 }
 
-const NoteCapture = ({ initialNotes, onSave }: NoteCaptureProps) => {
-  // Use initialNotes only once to set the starting state
-  const [editValue, setEditValue] = useState(initialNotes);
+const NoteCapture = ({ initialNoteContent, onSave }: NoteCaptureProps) => {
+  const [editValue, setEditValue] = useState(initialNoteContent);
 
   const handleSave = () => {
     onSave(editValue);

@@ -16,52 +16,36 @@ export const getSaved = async (req, res) => {
 export const save = async (req, res) => {
   try {
     const userId = req.user._id;
-    const {
-      character,
-      pinyin,
-      meaning,
-      semanticRadical,
-      phoneticComponent,
-      frequencyRank,
-      noteContent,
-    } = req.body;
+    const noteData = req.body;
 
-    if (!character) {
+    if (!noteData.character) {
       return res.status(400).json({ message: "Character is required" });
     }
 
-    const saved = await noteService.save(userId, {
-      character,
-      pinyin,
-      meaning,
-      semanticRadical,
-      phoneticComponent,
-      frequencyRank,
-      noteContent,
-    });
+    const savedNote = await noteService.saveNote(userId, noteData);
 
-    return res.status(200).json(saved);
+    return res.status(200).json(savedNote);
   } catch (error) {
     console.error("Error in save:", error);
     return res.status(500).json({ message: "System error" });
   }
 };
 
-// DELETE /api/notes/:id - delete a saved note
-export const remove = async (req, res) => {
+// DELETE /api/notes/:noteId - delete a saved note
+export const deleteNote = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { id } = req.params;
+    const { noteId } = req.params;
 
-    const note = await noteService.remove(userId, id);
+    const deletedNote = await noteService.deleteNote(userId, noteId);
 
-    if (!note) {
+    if (!deletedNote) {
       return res.status(404).json({ message: "Note not found" });
     }
 
     return res.sendStatus(204);
   } catch (error) {
-    console.error("Error in remove:", error);
+    console.error("Error in deleteNote:", error);
     return res.status(500).json({ message: "System error" });
   }
 };

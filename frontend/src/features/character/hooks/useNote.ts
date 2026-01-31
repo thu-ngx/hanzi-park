@@ -99,7 +99,7 @@ export const useSaveNote = () => {
         return [optimisticNote, ...(old || [])];
       });
 
-      toast.success("Note saved");
+      toast.success("Note saved in collection");
       return { previousNotes, previousNote };
     },
     onError: (_err, { data }, context) => {
@@ -121,16 +121,14 @@ export const useDeleteNote = () => {
     mutationFn: characterService.remove,
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
-      const previousNotes = queryClient.getQueryData<Note[]>([
-        "notes",
-      ]);
+      const previousNotes = queryClient.getQueryData<Note[]>(["notes"]);
 
       // Optimistically filter out the deleted item
       queryClient.setQueryData<Note[]>(["notes"], (old) =>
         old?.filter((char) => char._id !== id),
       );
 
-      toast.success("Character removed from notes");
+      toast.success("Character removed from collection");
       return { previousNotes };
     },
     onError: (_err, _id, context) => {

@@ -137,7 +137,7 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                   initialNoteContent={savedNoteContent}
                   onSave={(noteContent) => {
                     if (!accessToken) {
-                      toast.info("Please log in to save notes");
+                      toast.info("Please log in to save note");
                       return;
                     }
                     saveNote.mutate({ data, noteContent });

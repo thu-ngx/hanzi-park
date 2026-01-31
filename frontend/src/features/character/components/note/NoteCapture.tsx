@@ -23,7 +23,7 @@ const NoteCapture = ({ initialNoteContent, onSave }: NoteCaptureProps) => {
         className="w-full flex-1 px-3 py-2 text-sm rounded-xl border border-gray-300 bg-white focus:outline-none focus:border-primary resize-none"
       />
       <Button onClick={handleSave} className="w-fit cursor-pointer mx-auto">
-        Save note
+        Save to collection
       </Button>
     </div>
   );

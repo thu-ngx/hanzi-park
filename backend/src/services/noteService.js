@@ -12,7 +12,7 @@ export async function getOne(userId, character) {
     return noteRepo.findByUserAndCharacter(userId, character);
 }
 
-export async function save(userId, characterData) {
+export async function saveNote(userId, noteData) {
     const {
         character,
         pinyin,
@@ -21,7 +21,7 @@ export async function save(userId, characterData) {
         phoneticComponent,
         frequencyRank,
         noteContent,
-    } = characterData;
+    } = noteData;
 
     return noteRepo.upsert(userId, {
         character,
@@ -34,6 +34,6 @@ export async function save(userId, characterData) {
     });
 }
 
-export async function remove(userId, characterId) {
-    return noteRepo.deleteByIdAndUser(characterId, userId);
+export async function deleteNote(userId, noteId) {
+    return noteRepo.deleteByIdAndUser(noteId, userId);
 }

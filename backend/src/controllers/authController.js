@@ -1,4 +1,4 @@
-import brcypt from "bcrypt";
+import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
@@ -25,7 +25,7 @@ export const signUp = async (req, res) => {
     }
 
     // hash password
-    const hashedPassword = await brcypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // create new user
     await User.create({
@@ -62,7 +62,7 @@ export const logIn = async (req, res) => {
     }
 
     // compare hashedPassword with password input
-    const passwordCorrect = await brcypt.compare(password, user.hashedPassword);
+    const passwordCorrect = await bcrypt.compare(password, user.hashedPassword);
     if (!passwordCorrect) {
       return res
         .status(401)

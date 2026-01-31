@@ -37,7 +37,7 @@ api.interceptors.response.use(
       originalRequest.url.includes("/auth/login") ||
       originalRequest.url.includes("/auth/refresh")
     ) {
-      return Promise.reject("error");
+      return Promise.reject(error);
     }
 
     // accessToken expired (403)
@@ -61,7 +61,7 @@ api.interceptors.response.use(
     }
 
     // other error status
-    return Promise.reject("error");
+    return Promise.reject(error);
   },
 );
 

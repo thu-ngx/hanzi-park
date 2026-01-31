@@ -15,9 +15,9 @@ export const UserAccountNav = () => {
   const { user, logOut } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await logOut();
-    navigate("/");
+  const handleLogout = () => {
+    navigate("/", { replace: true });
+    logOut();
   };
 
   return (

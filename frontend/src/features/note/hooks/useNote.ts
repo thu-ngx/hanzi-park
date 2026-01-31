@@ -16,8 +16,15 @@ type NoteData = Pick<
 export const useNotes = () => {
   return useQuery({
     queryKey: ["notes"],
-    queryFn: noteService.getAll,
-    staleTime: 5 * 60 * 1000, // 5m
+    queryFn: async () => {
+      try {
+        return await noteService.getAll();
+      } catch (error) {
+        console.error("Failed to fetch notes:", error);
+        toast.error("Failed to load your collection");
+        throw error;
+      }
+    },
   });
 };
 
@@ -26,9 +33,16 @@ export const useNote = (character: string | undefined) => {
 
   return useQuery({
     queryKey: ["note", character],
-    queryFn: () => noteService.getByCharacter(character!),
+    queryFn: async () => {
+      try {
+        return await noteService.getByCharacter(character!);
+      } catch (error) {
+        console.error("Failed to fetch note:", error);
+        toast.error("Failed to load note");
+        throw error;
+      }
+    },
     enabled: !!character,
-    staleTime: 5 * 60 * 1000, // 5m
     // Check the "notes" list cache first before fetching
     initialData: () => {
       const allNotes = queryClient.getQueryData<Note[]>(["notes"]);
@@ -99,10 +113,11 @@ export const useSaveNote = () => {
         return [optimisticNote, ...(old || [])];
       });
 
-      toast.success("Note saved in collection");
+      toast.success("Note saved to collection");
       return { previousNotes, previousNote };
     },
-    onError: (_err, { data }, context) => {
+    onError: (error, { data }, context) => {
+      console.error("Failed to save note:", error);
       queryClient.setQueryData(["notes"], context?.previousNotes);
       queryClient.setQueryData(["note", data.character], context?.previousNote);
       toast.error("Failed to save note");
@@ -131,7 +146,8 @@ export const useDeleteNote = () => {
       toast.success("Character removed from collection");
       return { previousNotes };
     },
-    onError: (_err, _id, context) => {
+    onError: (error, _id, context) => {
+      console.error("Failed to delete note:", error);
       queryClient.setQueryData(["notes"], context?.previousNotes);
       toast.error("Failed to remove character");
     },

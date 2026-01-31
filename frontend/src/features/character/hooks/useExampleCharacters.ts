@@ -14,7 +14,7 @@ export const useExampleCharacters = () => {
     queries: EXAMPLE_CHARS.map((char) => ({
       queryKey: ["character", char],
       queryFn: () => characterService.getCharacter(char),
-      staleTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: Infinity, // Example character data doesn't change, never refetch automatically
     })),
   });
 

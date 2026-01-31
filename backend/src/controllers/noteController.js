@@ -65,3 +65,18 @@ export const remove = async (req, res) => {
     return res.status(500).json({ message: "System error" });
   }
 };
+
+// GET /api/notes/character/:character - get a single note by character
+export const getNoteByCharacter = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { character } = req.params;
+
+    const note = await noteService.getOne(userId, character);
+
+    return res.status(200).json(note);
+  } catch (error) {
+    console.error("Error in getNoteByCharacter:", error);
+    return res.status(500).json({ message: "System error" });
+  }
+};

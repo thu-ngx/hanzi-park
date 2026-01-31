@@ -21,6 +21,22 @@ export const useNotes = () => {
   });
 };
 
+export const useNote = (character: string | undefined) => {
+  const queryClient = useQueryClient();
+
+  return useQuery({
+    queryKey: ["note", character],
+    queryFn: () => characterService.getNote(character!),
+    enabled: !!character,
+    staleTime: 5 * 60 * 1000, // 5m
+    // Check the "notes" list cache first before fetching
+    initialData: () => {
+      const allNotes = queryClient.getQueryData<Note[]>(["notes"]);
+      return allNotes?.find((n) => n.character === character);
+    },
+  });
+};
+
 export const useSaveNote = () => {
   const queryClient = useQueryClient();
 
@@ -44,48 +60,56 @@ export const useSaveNote = () => {
     },
     onMutate: async ({ data, noteContent }) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
+      await queryClient.cancelQueries({ queryKey: ["note", data.character] });
 
-      const previousNotes = queryClient.getQueryData<Note[]>([
-        "notes",
+      const previousNotes = queryClient.getQueryData<Note[]>(["notes"]);
+      const previousNote = queryClient.getQueryData<Note | null>([
+        "note",
+        data.character,
       ]);
 
-      // Optimistically update or add the character
+      const optimisticNote: Note = {
+        _id: previousNote?._id || `temp-${Date.now()}`,
+        userId: previousNote?.userId || "",
+        character: data.character,
+        pinyin: data.pinyin,
+        meaning: data.meaning,
+        semanticRadical: data.semanticRadical,
+        phoneticComponent: data.phoneticComponent,
+        frequencyRank: data.frequencyRank,
+        noteContent,
+        createdAt: previousNote?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      // Optimistically update the individual note cache
+      queryClient.setQueryData<Note | null>(
+        ["note", data.character],
+        optimisticNote,
+      );
+
+      // Optimistically update or add to the notes list
       queryClient.setQueryData<Note[]>(["notes"], (old) => {
         const existing = old?.find((n) => n.character === data.character);
         if (existing) {
           return old?.map((n) =>
-            n.character === data.character
-              ? { ...n, noteContent, updatedAt: new Date().toISOString() }
-              : n,
+            n.character === data.character ? optimisticNote : n,
           );
         }
-        return [
-          {
-            _id: `temp-${Date.now()}`,
-            userId: "",
-            character: data.character,
-            pinyin: data.pinyin,
-            meaning: data.meaning,
-            semanticRadical: data.semanticRadical,
-            phoneticComponent: data.phoneticComponent,
-            frequencyRank: data.frequencyRank,
-            noteContent,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          },
-          ...(old || []),
-        ];
+        return [optimisticNote, ...(old || [])];
       });
 
       toast.success("Note saved");
-      return { previousNotes };
+      return { previousNotes, previousNote };
     },
-    onError: (_err, _newNote, context) => {
+    onError: (_err, { data }, context) => {
       queryClient.setQueryData(["notes"], context?.previousNotes);
+      queryClient.setQueryData(["note", data.character], context?.previousNote);
       toast.error("Failed to save note");
     },
-    onSettled: () => {
+    onSettled: (_data, _error, { data }) => {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
+      queryClient.invalidateQueries({ queryKey: ["note", data.character] });
     },
   });
 };

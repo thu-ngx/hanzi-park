@@ -31,6 +31,11 @@ export const characterService = {
     return res.data;
   },
 
+  getNote: async (char: string): Promise<Note | null> => {
+    const res = await api.get(`/notes/character/${encodeURIComponent(char)}`);
+    return res.data;
+  },
+
   save: async (data: Partial<Note>): Promise<Note> => {
     const res = await api.post("/notes", data);
     return res.data;

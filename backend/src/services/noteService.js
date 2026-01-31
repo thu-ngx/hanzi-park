@@ -8,6 +8,10 @@ export async function getAll(userId) {
     return noteRepo.findByUserId(userId);
 }
 
+export async function getOne(userId, character) {
+    return noteRepo.findByUserAndCharacter(userId, character);
+}
+
 export async function save(userId, characterData) {
     const {
         character,

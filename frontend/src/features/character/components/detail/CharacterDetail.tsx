@@ -9,7 +9,7 @@ import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
 import type { CharacterAnalysis } from "../../types/character";
-import { useNotes, useSaveNote } from "../../hooks/useNote";
+import { useNote, useSaveNote } from "../../hooks/useNote";
 
 interface CharacterDetailProps {
   data: CharacterAnalysis | null | undefined;
@@ -19,14 +19,13 @@ interface CharacterDetailProps {
 const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
   const { accessToken } = useAuthStore();
 
-  const { data: allNotes } = useNotes();
+  const { data: note } = useNote(data?.character);
   const saveNote = useSaveNote();
 
   const bucketedParents = useParentCharacters(data?.character);
   const decompositionData = useDecompositionData(data?.decomposition);
 
-  const savedNoteContent =
-    allNotes?.find((n) => n.character === data?.character)?.noteContent || "";
+  const savedNoteContent = note?.noteContent || "";
 
   if (!data && !isLoading) return null;
 

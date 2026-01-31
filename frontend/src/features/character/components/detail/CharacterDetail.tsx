@@ -69,7 +69,14 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                         {data.componentTree &&
                           data.componentTree.children.length > 0 && (
                             <div className="flex items-start gap-2 ml-4">
-                              {data.componentTree.children.map((comp) => (
+                              {[
+                                ...new Map(
+                                  data.componentTree.children.map((comp) => [
+                                    comp.char,
+                                    comp,
+                                  ]),
+                                ).values(),
+                              ].map((comp) => (
                                 <CharacterTile
                                   key={comp.char}
                                   char={comp.char}

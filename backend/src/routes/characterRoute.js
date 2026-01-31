@@ -1,15 +1,12 @@
 import express from "express";
 import {
-  getEntry,
-  lookup,
-  search,
+    getCharacter,
+    searchCharacters,
 } from "../controllers/characterController.js";
 
 const router = express.Router();
 
-// Dictionary/character lookup endpoints (public)
-router.get("/search", search);
-router.post("/lookup", lookup);
-router.get("/:char", getEntry);
+router.get("/search", searchCharacters);
+router.get("/:char", getCharacter);
 
 export default router;

@@ -8,7 +8,7 @@ type NoteData = Pick<
   | "character"
   | "pinyin"
   | "meaning"
-  | "semanticRadical"
+  | "semanticComponent"
   | "phoneticComponent"
   | "frequencyRank"
 >;
@@ -52,7 +52,7 @@ export const useSaveNote = () => {
         character: data.character,
         pinyin: data.pinyin,
         meaning: data.meaning,
-        semanticRadical: data.semanticRadical,
+        semanticComponent: data.semanticComponent,
         phoneticComponent: data.phoneticComponent,
         frequencyRank: data.frequencyRank,
         noteContent,
@@ -74,7 +74,7 @@ export const useSaveNote = () => {
         character: data.character,
         pinyin: data.pinyin,
         meaning: data.meaning,
-        semanticRadical: data.semanticRadical,
+        semanticComponent: data.semanticComponent,
         phoneticComponent: data.phoneticComponent,
         frequencyRank: data.frequencyRank,
         noteContent,

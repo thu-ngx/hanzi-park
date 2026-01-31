@@ -1,19 +1,15 @@
 import { toast } from "@/lib/toast";
-import {
-  useParentCharacters,
-  useDecompositionData,
-} from "@/features/character/hooks";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "../display/StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
 import CharacterDetailSkeleton from "./CharacterDetailSkeleton";
-import type { CharacterAnalysis } from "../../types/character";
+import type { Character } from "../../types/character";
 import { useNote, useSaveNote } from "../../hooks/useNote";
 
 interface CharacterDetailProps {
-  data: CharacterAnalysis | null | undefined;
+  data: Character | null | undefined;
   isLoading: boolean;
 }
 
@@ -23,12 +19,13 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
   const { data: note } = useNote(data?.character);
   const saveNote = useSaveNote();
 
-  const bucketedParents = useParentCharacters(data?.character);
-  const decompositionData = useDecompositionData(data?.decomposition);
-
   const savedNoteContent = note?.noteContent || "";
 
   if (!data && !isLoading) return null;
+
+  // Format pinyin and meaning for display
+  const displayPinyin = data?.pinyin?.join(", ") || "";
+  const displayMeaning = data?.definitions?.join("; ") || "";
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -63,44 +60,31 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                       <div className="flex items-center justify-center md:justify-start">
                         <p className="text-2xl text-gray-700">
                           <span className="font-chinese">{data.character}</span>{" "}
-                          <span className="italic">{data.pinyin}</span>
+                          <span className="italic">{displayPinyin}</span>
                         </p>
-                        {data.decomposition && (
-                          <div className="flex items-start gap-2 ml-4">
-                            {[
-                              ...new Set(
-                                [...data.decomposition].filter((char) =>
-                                  /\p{Script=Han}/u.test(char),
-                                ),
-                              ),
-                            ].map((char) => {
-                              const isSemantic =
-                                data.semanticRadical?.radical === char;
-                              const isPhonetic =
-                                data.phoneticComponent?.component === char;
-                              const charData = decompositionData.get(char);
-
-                              return (
+                        {data.componentTree &&
+                          data.componentTree.children.length > 0 && (
+                            <div className="flex items-start gap-2 ml-4">
+                              {data.componentTree.children.map((comp) => (
                                 <CharacterTile
-                                  key={char}
-                                  char={char}
-                                  pinyin={charData?.pinyin}
-                                  meaning={charData?.meaning}
+                                  key={comp.char}
+                                  char={comp.char}
+                                  pinyin={
+                                    comp.pinyin ? [comp.pinyin] : undefined
+                                  }
+                                  meaning={comp.meaning}
                                   role={
-                                    isSemantic
-                                      ? "semantic"
-                                      : isPhonetic
-                                        ? "phonetic"
-                                        : undefined
+                                    comp.role === "component"
+                                      ? undefined
+                                      : comp.role
                                   }
                                   variant="inline"
                                 />
-                              );
-                            })}
-                          </div>
-                        )}
+                              ))}
+                            </div>
+                          )}
                       </div>
-                      <p className="text-xl text-gray-600">{data.meaning}</p>
+                      <p className="text-xl text-gray-600">{displayMeaning}</p>
                       {data.etymology?.hint && (
                         <div className=" text-amber-700">
                           <p className="italic text-lg">
@@ -136,7 +120,17 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
                       toast.info("Please log in to save note");
                       return;
                     }
-                    saveNote.mutate({ data, noteContent });
+                    saveNote.mutate({
+                      data: {
+                        character: data.character,
+                        pinyin: displayPinyin,
+                        meaning: displayMeaning,
+                        semanticComponent: data.semanticComponent,
+                        phoneticComponent: data.phoneticComponent,
+                        frequencyRank: data.frequencyRank,
+                      },
+                      noteContent,
+                    });
                   }}
                 />
               </div>
@@ -145,20 +139,20 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
 
           {/* Phonetic Family */}
           <CharacterGrid
-            title={`Phonetic Family ${data.phoneticComponent?.component ?? ""}`}
-            data={data.phoneticFamily}
+            title={`Phonetic Family ${data.phoneticComponent?.char ?? ""}`}
+            data={data.phoneticSiblings}
           />
 
           {/* Semantic Family */}
           <CharacterGrid
-            title={`Semantic Family ${data.semanticRadical?.radical ?? ""}`}
-            data={data.semanticFamily}
+            title={`Semantic Family ${data.semanticComponent?.char ?? ""}`}
+            data={data.semanticSiblings}
           />
 
           {/* Parent Characters */}
           <CharacterGrid
             title={`${data.character} appears in`}
-            data={bucketedParents}
+            data={data.usedInCharacters}
           />
         </>
       )}

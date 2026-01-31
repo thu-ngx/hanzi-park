@@ -2,18 +2,18 @@ import { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import CharacterTile from "../display/CharacterTile";
 import type {
-  RichFamilyCharacter,
-  FrequencyBucketedFamily,
+  RelatedCharacter,
+  FrequencyGroupedList,
 } from "@/features/character/types/character";
 
 interface CharacterGridProps {
   title: string;
-  data: FrequencyBucketedFamily;
+  data: FrequencyGroupedList;
 }
 
 interface SectionProps {
   label: string;
-  chars: RichFamilyCharacter[];
+  chars: RelatedCharacter[];
 }
 
 const GridSection = ({ label, chars }: SectionProps) => {

@@ -12,8 +12,8 @@ const EXAMPLE_CHARS = ["清", "汜", "妈", "隹", "房", "船"];
 export const useExampleCharacters = () => {
   const queries = useQueries({
     queries: EXAMPLE_CHARS.map((char) => ({
-      queryKey: ["dictionary", char],
-      queryFn: () => characterService.getDictionaryEntry(char),
+      queryKey: ["character", char],
+      queryFn: () => characterService.getCharacter(char),
       staleTime: 10 * 60 * 1000, // 10 minutes
     })),
   });

@@ -33,7 +33,7 @@ const CharacterCard = ({
           </p>
 
           <CharacterTags
-            semanticRadical={note.semanticRadical}
+            semanticComponent={note.semanticComponent}
             phoneticComponent={note.phoneticComponent}
             frequencyRank={note.frequencyRank}
           />

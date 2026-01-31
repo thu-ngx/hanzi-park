@@ -21,14 +21,15 @@ const noteSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
-        semanticRadical: {
-            radical: { type: String },
-            meaning: { type: String },
+        semanticComponent: {
+            char: { type: String },
             pinyin: { type: String },
+            meaning: { type: String },
         },
         phoneticComponent: {
-            component: { type: String },
-            sound: { type: String },
+            char: { type: String },
+            pinyin: { type: String },
+            meaning: { type: String },
         },
         frequencyRank: {
             type: Number,

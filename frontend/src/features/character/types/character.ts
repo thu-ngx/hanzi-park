@@ -1,46 +1,74 @@
-export interface SemanticRadical {
-  radical: string;
-  meaning: string;
-  pinyin?: string;
-}
+// ============================================
+// CHARACTER TYPES
+// ============================================
 
-export interface PhoneticComponent {
-  component: string;
-  sound: string;
-  meaning?: string;
-  pinyin?: string;
-}
-
-export interface RichFamilyCharacter {
+export interface RelatedCharacter {
   char: string;
   pinyin: string[];
   meaning: string | null;
 }
 
-export interface FrequencyBucketedFamily {
-  top1000: RichFamilyCharacter[];
-  mid: RichFamilyCharacter[];
-  rest: RichFamilyCharacter[];
+export interface FrequencyGroupedList {
+  top1000: RelatedCharacter[];
+  mid: RelatedCharacter[];
+  rest: RelatedCharacter[];
 }
 
-export interface CharacterAnalysis {
+export interface ComponentNode {
+  char: string;
+  role: "semantic" | "phonetic" | "component";
+  pinyin: string | null;
+  meaning: string | null;
+}
+
+export interface ComponentTree {
+  char: string;
+  children: ComponentNode[];
+}
+
+export interface Character {
   character: string;
-  pinyin: string;
-  meaning: string;
-  strokeCount: number;
-  frequencyRank: number | null;
-  semanticRadical: SemanticRadical | null;
-  phoneticComponent: PhoneticComponent | null;
-  phoneticFamily: FrequencyBucketedFamily;
-  semanticFamily: FrequencyBucketedFamily;
-  etymology?: {
+  pinyin: string[];
+  definitions: string[];
+  decomposition: string | null;
+  etymology: {
     type?: string;
     phonetic?: string;
     semantic?: string;
     hint?: string;
-  };
-  decomposition?: string;
+  } | null;
+  matches: (number[] | null)[];
+  frequencyRank: number | null;
+
+  componentTree: ComponentTree | null;
+
+  usedInCharacters: FrequencyGroupedList;
+
+  semanticComponent: {
+    char: string;
+    pinyin: string;
+    meaning: string;
+  } | null;
+  semanticSiblings: FrequencyGroupedList;
+
+  phoneticComponent: {
+    char: string;
+    pinyin: string;
+    meaning: string;
+  } | null;
+  phoneticSiblings: FrequencyGroupedList;
 }
+
+export interface CharacterSearchResult {
+  character: string;
+  pinyin: string;
+  meaning: string;
+  frequencyRank: number | null;
+}
+
+// ============================================
+// NOTE TYPES
+// ============================================
 
 export interface Note {
   _id: string;
@@ -48,52 +76,18 @@ export interface Note {
   character: string;
   pinyin: string;
   meaning: string;
-  semanticRadical: SemanticRadical | null;
-  phoneticComponent: PhoneticComponent | null;
+  semanticComponent: {
+    char: string;
+    pinyin: string;
+    meaning: string;
+  } | null;
+  phoneticComponent: {
+    char: string;
+    pinyin: string;
+    meaning: string;
+  } | null;
   frequencyRank: number | null;
   noteContent: string;
   createdAt: string;
   updatedAt: string;
-}
-
-// Composition Graph types (from /api/dictionary)
-
-export interface TreeNode {
-  char: string;
-  role: "semantic" | "phonetic" | "component";
-  pinyin: string | null;
-  meaning: string | null;
-}
-
-export interface CompositionTree {
-  char: string;
-  children: TreeNode[];
-}
-
-export interface ParentCharacter {
-  char: string;
-  pinyin: string[];
-  meaning: string | null;
-}
-
-export interface DictionaryEntry {
-  character: string;
-  pinyin: string[];
-  definitions: string[];
-  decomposition: string;
-  etymology: {
-    type?: string;
-    phonetic?: string;
-    semantic?: string;
-    hint?: string;
-  };
-  tree: CompositionTree | null;
-  parents: ParentCharacter[];
-}
-
-export interface SearchResult {
-  character: string;
-  pinyin: string;
-  meaning: string;
-  frequencyRank: number | null;
 }

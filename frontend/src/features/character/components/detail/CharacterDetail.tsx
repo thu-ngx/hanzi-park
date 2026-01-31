@@ -8,6 +8,7 @@ import StrokeOrderAnimation from "../display/StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
 import NoteCapture from "../note/NoteCapture";
+import CharacterDetailSkeleton from "./CharacterDetailSkeleton";
 import type { CharacterAnalysis } from "../../types/character";
 import { useNote, useSaveNote } from "../../hooks/useNote";
 
@@ -32,12 +33,7 @@ const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Loading state */}
-      {isLoading && (
-        <div className="flex flex-col items-center gap-4 py-16">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin" />
-          <p className="text-gray-500">Loading character...</p>
-        </div>
-      )}
+      {isLoading && <CharacterDetailSkeleton />}
 
       {data && !isLoading && (
         <>

@@ -3,10 +3,10 @@ import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import StrokeOrderAnimation from "../display/StrokeOrderAnimation";
 import CharacterGrid from "./CharacterGrid";
 import CharacterTile from "../display/CharacterTile";
-import NoteCapture from "../note/NoteCapture";
+import NoteCapture from "@/features/note/components/editor/NoteCapture";
 import CharacterDetailSkeleton from "./CharacterDetailSkeleton";
 import type { Character } from "../../types/character";
-import { useNote, useSaveNote } from "../../hooks/useNote";
+import { useNote, useSaveNote } from "@/features/note/hooks/useNote";
 
 interface CharacterDetailProps {
   data: Character | null | undefined;

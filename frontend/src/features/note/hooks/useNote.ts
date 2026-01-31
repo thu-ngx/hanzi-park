@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { characterService } from "../services/characterService";
+import { noteService } from "../services/noteService";
 import { toast } from "@/lib/toast";
-import type { Note } from "../types/character";
+import type { Note } from "../types/note";
 
 type NoteData = Pick<
   Note,
@@ -16,7 +16,7 @@ type NoteData = Pick<
 export const useNotes = () => {
   return useQuery({
     queryKey: ["notes"],
-    queryFn: characterService.getSaved,
+    queryFn: noteService.getAll,
     staleTime: 5 * 60 * 1000, // 5m
   });
 };
@@ -26,7 +26,7 @@ export const useNote = (character: string | undefined) => {
 
   return useQuery({
     queryKey: ["note", character],
-    queryFn: () => characterService.getNote(character!),
+    queryFn: () => noteService.getByCharacter(character!),
     enabled: !!character,
     staleTime: 5 * 60 * 1000, // 5m
     // Check the "notes" list cache first before fetching
@@ -48,7 +48,7 @@ export const useSaveNote = () => {
       data: NoteData;
       noteContent: string;
     }) => {
-      return characterService.save({
+      return noteService.save({
         character: data.character,
         pinyin: data.pinyin,
         meaning: data.meaning,
@@ -118,7 +118,7 @@ export const useDeleteNote = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: characterService.remove,
+    mutationFn: noteService.remove,
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey: ["notes"] });
       const previousNotes = queryClient.getQueryData<Note[]>(["notes"]);

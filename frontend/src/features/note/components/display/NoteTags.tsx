@@ -10,17 +10,17 @@ interface PhoneticComponent {
   meaning: string;
 }
 
-interface CharacterTagsProps {
+interface NoteTagsProps {
   semanticComponent?: SemanticComponent | null;
   phoneticComponent?: PhoneticComponent | null;
   frequencyRank?: number | null;
 }
 
-const CharacterTags = ({
+const NoteTags = ({
   semanticComponent,
   phoneticComponent,
   frequencyRank,
-}: CharacterTagsProps) => {
+}: NoteTagsProps) => {
   const hasTags = semanticComponent || phoneticComponent || frequencyRank;
 
   if (!hasTags) return null;
@@ -46,4 +46,4 @@ const CharacterTags = ({
   );
 };
 
-export default CharacterTags;
+export default NoteTags;

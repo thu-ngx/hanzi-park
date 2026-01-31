@@ -65,29 +65,3 @@ export interface CharacterSearchResult {
   meaning: string;
   frequencyRank: number | null;
 }
-
-// ============================================
-// NOTE TYPES
-// ============================================
-
-export interface Note {
-  _id: string;
-  userId: string;
-  character: string;
-  pinyin: string;
-  meaning: string;
-  semanticComponent: {
-    char: string;
-    pinyin: string;
-    meaning: string;
-  } | null;
-  phoneticComponent: {
-    char: string;
-    pinyin: string;
-    meaning: string;
-  } | null;
-  frequencyRank: number | null;
-  noteContent: string;
-  createdAt: string;
-  updatedAt: string;
-}

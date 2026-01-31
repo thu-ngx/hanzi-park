@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea"; // Assuming Shadcn Textarea exists or use standard
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,

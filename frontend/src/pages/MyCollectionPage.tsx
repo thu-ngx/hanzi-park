@@ -1,13 +1,13 @@
 import { useState, useMemo } from "react";
 import Navbar from "@/components/layout/Navbar";
-import CharacterCard from "@/features/character/components/card/CharacterCard";
-import SkeletonCard from "@/features/character/components/card/SkeletonCard";
+import NoteCard from "@/features/note/components/card/NoteCard";
+import NoteCardSkeleton from "@/features/note/components/card/NoteCardSkeleton";
 import { Search, Bookmark } from "lucide-react";
 import {
   useNotes,
   useDeleteNote,
   useSaveNote,
-} from "@/features/character/hooks/useNote";
+} from "@/features/note/hooks/useNote";
 
 const MyCollectionPage = () => {
   const { data: notes = [], isLoading } = useNotes();
@@ -68,7 +68,7 @@ const MyCollectionPage = () => {
           {isLoading && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {Array.from({ length: 6 }).map((_, i) => (
-                <SkeletonCard key={i} />
+                <NoteCardSkeleton key={i} />
               ))}
             </div>
           )}
@@ -77,7 +77,7 @@ const MyCollectionPage = () => {
           {!isLoading && filtered.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filtered.map((note) => (
-                <CharacterCard
+                <NoteCard
                   key={note._id}
                   note={note}
                   onRemove={(id) => deleteNote.mutate(id)}

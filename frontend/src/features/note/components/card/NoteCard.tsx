@@ -1,21 +1,21 @@
 import { Link } from "react-router";
 import { Trash2, Pencil } from "lucide-react";
-import type { Note } from "@/features/character/types/character";
-import CharacterTags from "../display/CharacterTags";
+import type { Note } from "@/features/note/types/note";
+import NoteTags from "../display/NoteTags";
 import { Button } from "@/components/ui/button";
-import EditNoteDialog from "../note/EditNoteDialog";
+import EditNoteDialog from "../editor/EditNoteDialog";
 
-interface CharacterCardProps {
+interface NoteCardProps {
   note: Note;
   onRemove: (id: string) => void;
   onSaveNoteContent: (noteContent: string) => void;
 }
 
-const CharacterCard = ({
+const NoteCard = ({
   note,
   onRemove,
   onSaveNoteContent,
-}: CharacterCardProps) => {
+}: NoteCardProps) => {
   return (
     <div className="flex flex-col rounded-xl border border-gray-200 bg-white hover:shadow-soft hover:border-primary transition-all overflow-hidden h-full">
       {/* Clickable card area */}
@@ -32,7 +32,7 @@ const CharacterCard = ({
             {note.meaning}
           </p>
 
-          <CharacterTags
+          <NoteTags
             semanticComponent={note.semanticComponent}
             phoneticComponent={note.phoneticComponent}
             frequencyRank={note.frequencyRank}
@@ -80,4 +80,4 @@ const CharacterCard = ({
   );
 };
 
-export default CharacterCard;
+export default NoteCard;

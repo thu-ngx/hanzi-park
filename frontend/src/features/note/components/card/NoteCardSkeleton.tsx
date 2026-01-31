@@ -1,4 +1,4 @@
-const SkeletonCard = ({ compact = false }: { compact?: boolean }) => {
+const NoteCardSkeleton = ({ compact = false }: { compact?: boolean }) => {
   if (compact) {
     return (
       <div className="flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-200 bg-white animate-pulse">
@@ -26,4 +26,4 @@ const SkeletonCard = ({ compact = false }: { compact?: boolean }) => {
   );
 };
 
-export default SkeletonCard;
+export default NoteCardSkeleton;

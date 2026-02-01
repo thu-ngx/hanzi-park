@@ -15,7 +15,8 @@ interface CharacterDetailProps {
 const CharacterDetail = ({ data, isLoading }: CharacterDetailProps) => {
   const { accessToken } = useAuthStore();
 
-  const { data: note } = useNote(data?.character);
+  // Only fetch note if logged in
+  const { data: note } = useNote(accessToken ? data?.character : undefined);
   const saveNote = useSaveNote();
 
   const savedNoteContent = note?.noteContent || "";

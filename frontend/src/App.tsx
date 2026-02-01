@@ -6,7 +6,7 @@ import CharacterPage from "./pages/CharacterPage";
 import MyCollectionPage from "./pages/MyCollectionPage";
 import { Toaster } from "sonner";
 import ProtectedRoute from "@/features/auth/guards/ProtectedRoute";
-import OptionalAuthLoader from "@/features/auth/guards/OptionalAuthLoader";
+import GuestRoute from "@/features/auth/guards/GuestRoute";
 import { Analytics } from "@vercel/analytics/react";
 
 function App() {
@@ -16,16 +16,16 @@ function App() {
       <Toaster richColors />
       <BrowserRouter>
         <Routes>
-          {/* public routes (no auth required) */}
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LogInPage />} />
-
-          {/* public routes with optional auth (loads user if logged in) */}
-          <Route element={<OptionalAuthLoader />}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/character/:char" element={<CharacterPage />} />
+          {/* guest-only routes (redirect to home if logged in) */}
+          <Route element={<GuestRoute />}>
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/login" element={<LogInPage />} />
           </Route>
-          
+
+          {/* public routes */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/character/:char" element={<CharacterPage />} />
+
           {/* protected routes (auth required) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/collection" element={<MyCollectionPage />} />

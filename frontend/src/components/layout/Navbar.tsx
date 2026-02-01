@@ -1,3 +1,4 @@
+import { useEffect } from "react"; //
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { useNavigate, useLocation } from "react-router";
 import GlobalSearch from "@/features/character/components/search/GlobalSearch";
@@ -6,12 +7,21 @@ import BrandLogo from "@/components/layout/BrandLogo";
 import { UserAccountNav } from "@/components/layout/UserAccountNav";
 
 const Navbar = () => {
-  const { accessToken } = useAuthStore();
+  const { accessToken, refresh } = useAuthStore();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const isHomePage = pathname === "/";
   const isLoggedIn = !!accessToken;
+
+  // Attempt to restore session on public pages
+  useEffect(() => {
+    if (!accessToken) {
+      refresh({ silent: true }).catch(() => {
+        // Just remain as guest if refresh fails
+      });
+    }
+  }, [accessToken, refresh]);
 
   return (
     <nav className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-gray-200">

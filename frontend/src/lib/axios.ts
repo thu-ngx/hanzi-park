@@ -40,8 +40,7 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // accessToken expired (403)
-    if (error.response?.status == 403 && !originalRequest._retryCount) {
+    if (error.response?.status === 401 && !originalRequest._retryCount) {
       originalRequest._retryCount = true;
       console.log("Retry refresh");
 

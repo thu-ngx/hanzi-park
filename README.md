@@ -11,6 +11,18 @@ A Chinese character exploration tool that helps learners explore, understand, an
 - **Personal Notes** — Save characters to your collection with custom notes
 - And more to come!
 
+<div align="center">
+  <img src="public/s1.png" alt="Home page UI" width="800">
+  <p><em>Home page interface </em></p>
+
+  <img src="public/s2.png" alt="Character Detail Page UI" width="800">
+  <p><em>Character details page interface </em></p>
+
+  <img src="public/s3.png" alt="Collection page UI" width="800">
+  <p><em>Collection page interface </em></p>
+
+</div>
+
 ## Tech Stack
 
 **Frontend**
@@ -112,7 +124,6 @@ hanzi-park/
    ```
 
    This runs both frontend (http://localhost:5173) and backend (http://localhost:5001) concurrently.
-                  
 
 ## Data Sources
 

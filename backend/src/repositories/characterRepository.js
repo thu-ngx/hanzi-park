@@ -20,7 +20,7 @@ export async function findBySemanticComponent(semanticComponent, excludeChar, li
         },
         { character: 1, frequencyRank: 1, pinyin: 1, definitions: 1, _id: 0 }
     )
-        .limit(limit)
+        // .limit(limit)
         .lean();
 }
 
@@ -32,7 +32,7 @@ export async function findByPhoneticComponent(phoneticComponent, excludeChar, li
         },
         { character: 1, frequencyRank: 1, pinyin: 1, definitions: 1, _id: 0 }
     )
-        .limit(limit)
+        // .limit(limit)
         .lean();
 }
 
@@ -41,7 +41,7 @@ export async function findContainingComponent(component, limit = 50) {
         { components: component },
         { character: 1, pinyin: 1, definitions: 1, frequencyRank: 1, _id: 0 }
     )
-        .limit(limit)
+        // .limit(limit)
         .lean();
 }
 
@@ -56,7 +56,7 @@ export async function searchByText(query, limit = 50) {
         { character: 1, pinyin: 1, definitions: 1, frequencyRank: 1, _id: 0 }
     )
         .sort({ frequencyRank: 1 })
-        .limit(limit)
+        // .limit(limit)
         .lean();
 }
 
